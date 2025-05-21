@@ -1,13 +1,13 @@
 #include "../inc/philosophers.h"
 
-void	wait_end_action(int time_to)
+/*void	wait_end_action(int time_to)
 {
 	size_t	end;
 
 	end = get_time() + (size_t)time_to;
 	while (get_time() < end)
 		continue;
-}
+}*/
 
 t_bool	is_dead(t_data *data, t_philo *p)
 {
@@ -28,7 +28,7 @@ int	a_think(t_data *data, t_philo *p)
 	printf("%s%ld %d is thinking\n", KYEL, get_time(), p->ID);
 	if (p->fork_free == FALSE && p->next->fork_free == FALSE)
 	{
-		//printf("%ld %d is thinking\n", get_time(), p->ID);
+		//printf("%s%ld %d is thinking\n", KYEL, get_time(), p->ID);
 		a_think(data, p);
 	}
 	else
@@ -47,8 +47,8 @@ int	a_eat(t_data *data, t_philo *p)
 	p->fork_free = FALSE;
 	p->next->fork_free = FALSE;
 	printf("%s%ld %d is eating\n", KGRN, get_time(), p->ID);
-	//usleep(data->time_to_eat * 1000);
-	wait_end_action(data->time_to_eat);
+	usleep(data->time_to_eat * 1000);
+	//wait_end_action(data->time_to_eat);
 	p->last_meal = get_time();
 	p->fork_free = TRUE;
 	p->next->fork_free = TRUE;
@@ -57,7 +57,7 @@ int	a_eat(t_data *data, t_philo *p)
 	{
 		if (p->nmeal == data->meals_min)
 		{
-			printf("%ld %d has finished all his meals\n", get_time(), p->ID);
+			printf("%s%ld %d has finished all his meals\n", KNRM, get_time(), p->ID);
 			data->nphilo --;
 		}
 	}
@@ -72,8 +72,8 @@ int	a_sleep(t_data *data, t_philo *p)
 		return (1);
 	p->action = 's';
 	printf("%s%ld %d is sleeping\n", KMAG, get_time(), p->ID);
-	//usleep(data->time_to_sleep * 1000);
-	wait_end_action(data->time_to_sleep);
+	usleep(data->time_to_sleep * 1000);
+	//wait_end_action(data->time_to_sleep);
 	if (a_think(data, p))
 		return (1);
 	return (0);

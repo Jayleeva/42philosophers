@@ -19,15 +19,17 @@ void	simulation(t_data *data, t_philo *list)
 		printf("ID: %d\n", current->ID);
 		current = current->next;
 	}*/
+	printf("%s===========================\n--- START OF SIMULATION ---\n===========================\n", KNRM);
 	list->last_meal = get_time();
 	while (data->nphilo) // pour compter les repas; pour que marche aussi dès la première mort, faire en sorte que la première mort élimine tous les autres. mettre aussi une mutex sur le nombre de philo
 	{
 		if (a_think(data, list))
 		{
 			data->nphilo = 0; // fermer tous les threads
-			return ; 
+			break ;
 		}
 	}
+	printf("%s===========================\n---- END OF SIMULATION ----\n===========================\n", KNRM);
 }
 
 //pthread_create
