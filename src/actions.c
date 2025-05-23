@@ -15,6 +15,7 @@ t_bool	is_dead(t_data *data)
 	{
 		data->list->dead = TRUE;
 		printf("%s%ld %d is dead\n", KRED, get_time(), data->list->ID);
+		data->dead = TRUE;
 		return (TRUE);
 	}
 	return (FALSE); 
@@ -57,7 +58,7 @@ int	a_eat(t_data *data)
 	{
 		if (data->list->nmeal == data->meals_min)
 		{
-			printf("%s%ld %d has finished all his meals\n", KNRM, get_time(), data->list->ID);
+			printf("%s%ld %d has finished all her meals\n", KNRM, get_time(), data->list->ID);
 			data->nphilo --;
 		}
 	}

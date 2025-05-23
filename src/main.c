@@ -48,6 +48,7 @@ void	init_data(t_data *data)
 	data->time_to_eat = 0;
 	data->time_to_sleep = 0;
 	data->meals_min = -1;
+	data->dead = FALSE;
 }
 
 int	main(int argc, char **argv)

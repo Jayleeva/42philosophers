@@ -38,6 +38,7 @@ typedef struct s_data
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		meals_min;
+	t_bool	dead;
 	t_philo	*list;
 }			t_data;
 
