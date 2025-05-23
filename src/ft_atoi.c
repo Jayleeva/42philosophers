@@ -1,5 +1,6 @@
 #include "../inc/philosophers.h"
 
+//Transformation d'une chaine de char ascii en int
 int	ft_atoi(const char *str)
 {
 	int	i;

@@ -20,12 +20,6 @@ typedef unsigned char	t_bool;
 # define KCYN  "\x1B[36m"
 # define KWHT  "\x1B[37m"
 
-/*struct timeval
-{
-    time_t      tv_sec;
-    suseconds_t tv_usec; 
-};*/
-
 typedef struct s_philo
 {
 	int				ID;
@@ -39,21 +33,23 @@ typedef struct s_philo
 
 typedef struct s_data
 {
-	int	nphilo;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	meals_min;
-}		t_data;
+	int		nphilo;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	int		meals_min;
+	t_philo	*list;
+}			t_data;
 
 //launch
-void	simulation(t_data *data, t_philo *list);
+void	simulation(t_data *data);
+void	*launch(void *data);
 
 //actions
-t_bool	is_dead(t_data *data, t_philo *p);
-int		a_think(t_data *data, t_philo *p);
-int		a_eat(t_data *data, t_philo *p);
-int		a_sleep(t_data *data, t_philo *p);
+t_bool	is_dead(t_data *data);
+int		a_think(t_data *data);
+int		a_eat(t_data *data);
+int		a_sleep(t_data *data);
 
 //utils
 size_t	get_time(void);

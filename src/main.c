@@ -14,6 +14,7 @@ void	init_philo(t_philo *current)
 	i ++;
 }
 
+//Creation de la liste chainee contenant les philos
 t_philo	*create_list(int nphilo)
 {
 	t_philo	*head;
@@ -70,7 +71,8 @@ int	main(int argc, char **argv)
 	list = create_list(data.nphilo);
 	if (!list)
 		return (1);
-	simulation(&data, list);
+	data.list = list;
+	simulation(&data);
 	//free_list(list);
 	return (0);
 }

@@ -9,72 +9,72 @@
 		continue;
 }*/
 
-t_bool	is_dead(t_data *data, t_philo *p)
+t_bool	is_dead(t_data *data)
 {
-	if (get_time() - p->last_meal >= (size_t)data->time_to_die)
+	if (get_time() - data->list->last_meal >= (size_t)data->time_to_die)
 	{
-		p->dead = TRUE;
-		printf("%s%ld %d is dead\n", KRED, get_time(), p->ID);
+		data->list->dead = TRUE;
+		printf("%s%ld %d is dead\n", KRED, get_time(), data->list->ID);
 		return (TRUE);
 	}
 	return (FALSE); 
 }
 
-int	a_think(t_data *data, t_philo *p)
+int	a_think(t_data *data)
 {
-	if (is_dead(data, p))
+	if (is_dead(data))
 		return (1);
-	p->action = 't';
-	printf("%s%ld %d is thinking\n", KYEL, get_time(), p->ID);
-	if (p->fork_free == FALSE && p->next->fork_free == FALSE)
+	data->list->action = 't';
+	printf("%s%ld %d is thinking\n", KYEL, get_time(), data->list->ID);
+	if (data->list->fork_free == FALSE && data->list->next->fork_free == FALSE)
 	{
-		//printf("%s%ld %d is thinking\n", KYEL, get_time(), p->ID);
-		a_think(data, p);
+		//printf("%s%ld %d is thinking\n", KYEL, get_time(), data->list->ID);
+		a_think(data);
 	}
 	else
 	{
-		if (a_eat(data, p))
+		if (a_eat(data))
 			return (1);
 	}
 	return (0);
 }
 
-int	a_eat(t_data *data, t_philo *p)
+int	a_eat(t_data *data)
 {
-	if (is_dead(data, p))
+	if (is_dead(data))
 		return (1);
-	p->action = 'e';
-	p->fork_free = FALSE;
-	p->next->fork_free = FALSE;
-	printf("%s%ld %d is eating\n", KGRN, get_time(), p->ID);
+	data->list->action = 'e';
+	data->list->fork_free = FALSE;
+	data->list->next->fork_free = FALSE;
+	printf("%s%ld %d is eating\n", KGRN, get_time(), data->list->ID);
 	usleep(data->time_to_eat * 1000);
 	//wait_end_action(data->time_to_eat);
-	p->last_meal = get_time();
-	p->fork_free = TRUE;
-	p->next->fork_free = TRUE;
-	p->nmeal ++;
+	data->list->last_meal = get_time();
+	data->list->fork_free = TRUE;
+	data->list->next->fork_free = TRUE;
+	data->list->nmeal ++;
 	if (data->meals_min > -1)
 	{
-		if (p->nmeal == data->meals_min)
+		if (data->list->nmeal == data->meals_min)
 		{
-			printf("%s%ld %d has finished all his meals\n", KNRM, get_time(), p->ID);
+			printf("%s%ld %d has finished all his meals\n", KNRM, get_time(), data->list->ID);
 			data->nphilo --;
 		}
 	}
-	if (a_sleep(data, p))
+	if (a_sleep(data))
 		return (1);
 	return (0);
 }
 
-int	a_sleep(t_data *data, t_philo *p)
+int	a_sleep(t_data *data)
 {
-	if (is_dead(data, p))
+	if (is_dead(data))
 		return (1);
-	p->action = 's';
-	printf("%s%ld %d is sleeping\n", KMAG, get_time(), p->ID);
+	data->list->action = 's';
+	printf("%s%ld %d is sleeping\n", KMAG, get_time(), data->list->ID);
 	usleep(data->time_to_sleep * 1000);
 	//wait_end_action(data->time_to_sleep);
-	if (a_think(data, p))
+	if (a_think(data))
 		return (1);
 	return (0);
 }
