@@ -73,7 +73,9 @@ int	main(int argc, char **argv)
 	if (!list)
 		return (1);
 	data.list = list;
-	simulation(&data);
+	start_simulation(&data);
+	/*if (data.dead)
+		end_simulation(thread, data.nphilo);*/
 	//free_list(list);
 	return (0);
 }

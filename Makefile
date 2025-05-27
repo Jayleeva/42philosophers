@@ -5,6 +5,7 @@ SRC = 	main.c \
 		ft_atoi.c \
 		simulation.c \
 		actions.c \
+		output.c \
 		free_list.c \
 		
 OBJ = $(SRC:.c=.o)

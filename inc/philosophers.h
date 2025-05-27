@@ -11,6 +11,15 @@ typedef unsigned char	t_bool;
 # define TRUE 1
 # define FALSE 0
 
+# define THINK "is thinking"
+# define EAT "is eating"
+# define SLEEP "is sleeping"
+# define DEAD "is dead"
+# define FINISH "has finished all her meals"
+
+# define START "===========================\n--- START OF SIMULATION ---\n==========================="
+# define END "===========================\n---- END OF SIMULATION ----\n==========================="
+
 # define KNRM  "\x1B[0m"
 # define KRED  "\x1B[31m"
 # define KGRN  "\x1B[32m"
@@ -31,6 +40,13 @@ typedef struct s_philo
 	struct s_philo	*next;
 }					t_philo;
 
+typedef struct s_mutex
+{
+	pthread_mutex_t	printm;
+	pthread_mutex_t	fork0m;
+	pthread_mutex_t	fork1m;
+}					t_mutex;
+
 typedef struct s_data
 {
 	int		nphilo;
@@ -40,17 +56,24 @@ typedef struct s_data
 	int		meals_min;
 	t_bool	dead;
 	t_philo	*list;
+	t_mutex	mutex;
 }			t_data;
 
 //launch
-void	simulation(t_data *data);
-void	*launch(void *data);
+void	start_simulation(t_data *data);
+void	*routine(void *data);
+
+//exit
+void	end_simulation(pthread_t **thread, int nphilo);
 
 //actions
 t_bool	is_dead(t_data *data);
 int		a_think(t_data *data);
 int		a_eat(t_data *data);
 int		a_sleep(t_data *data);
+
+//output
+void    write_output(t_mutex *mutex, char *color, int philo, char *action);
 
 //utils
 size_t	get_time(void);
