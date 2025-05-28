@@ -29,12 +29,21 @@ typedef unsigned char	t_bool;
 # define KCYN  "\x1B[36m"
 # define KWHT  "\x1B[37m"
 
+/*typedef	struct s_fork
+{
+	t_bool			fork_free;
+	pthread_mutex_t	forkm;
+}					t_fork;*/
+
+
 typedef struct s_philo
 {
 	int				ID;
 	char			action;
 	t_bool			fork_free;
-	size_t			last_meal;
+	//struct s_fork	fork;
+	time_t			last_meal;
+	//pthread_mutex_t	last_mealm;
 	int				nmeal;
 	t_bool			dead;
 	struct s_philo	*next;
@@ -42,29 +51,31 @@ typedef struct s_philo
 
 typedef struct s_mutex
 {
+	pthread_mutex_t	last_mealm;
+	pthread_mutex_t	forkm;
+	pthread_mutex_t	deadm;
 	pthread_mutex_t	printm;
-	pthread_mutex_t	fork0m;
-	pthread_mutex_t	fork1m;
 }					t_mutex;
 
 typedef struct s_data
 {
-	int		nphilo;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		meals_min;
-	t_bool	dead;
-	t_philo	*list;
-	t_mutex	mutex;
-}			t_data;
+	int				nphilo;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
+	int				meals_min;
+	t_bool			dead;
+	t_philo			*list;
+	t_mutex			mutex;
+}					t_data;
 
 //launch
 void	start_simulation(t_data *data);
 void	*routine(void *data);
 
 //exit
-void	end_simulation(pthread_t **thread, int nphilo);
+t_bool	has_simulation_ended(t_data *data);
+void	end_simulation(t_data *data, pthread_t **thread, int nphilo);
 
 //actions
 t_bool	is_dead(t_data *data);

@@ -9,9 +9,9 @@ size_t	get_time(void)
 	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
 }
 
-t_bool	simulation_ended(t_data *data)
+t_bool	has_simulation_ended(t_data *data)
 {
-	if (data->dead || !data->nphilo)
+	if (data->dead || is_dead(data) || !data->nphilo)
 	{
 		//printf("AAAAAAAAAAAAAAAAAAAAAAH\n");
 		return (TRUE);
@@ -19,7 +19,7 @@ t_bool	simulation_ended(t_data *data)
 	return (FALSE);
 }
 
-//Lancement de chaque thread: le philo du thread obtient l'heure de son dernier repas puis demarre son cycle.
+//Lancement de chaque thread "philo": le philo concerné obtient l'heure de son dernier repas puis demarre son cycle. Si son ID est pair, il commence par penser/manger, puis il dort; sinon, il commence par dormir, puis il pense/mange; il recommence jusqu'à la fin de la simulation. S'il meurt, on sort de la boucle et on renvoie *data.
 void	*routine(void *data)
 {
 	t_data	*data_;
@@ -28,53 +28,42 @@ void	*routine(void *data)
 	data_->list->last_meal = get_time();
 	if (data_->list->ID % 2 == 0)
 	{
-		while (!simulation_ended(data_))
+		while (!has_simulation_ended(data_))
 		{
-			if (!a_think(data_))
+			if (a_think(data_))
 				break ;
-			if (!a_sleep(data_))
+			if (a_sleep(data_))
 				break;
 		}
 	}
 	else
 	{
-		while (!simulation_ended(data_))
+		while (!has_simulation_ended(data_))
 		{
-			if (!a_sleep(data_))
+			if (a_sleep(data_))
 				break ;
-			if (!a_think(data_))
+			if (a_think(data_))
 				break;
 		}
 	}
 	return (data);
 }
+
 //Verification qu'aucun philo n'est mort
 void	*monitor(void *data)
 {
-	//int		i;
 	t_data	*data_;
-	//t_bool	dead;
 
 	data_ = data;
 	while (1)
 	{
 		if (data_->dead)
 			return (data);
-		/*i = 0;
-		while (i < data_->nphilo)
-		{
-			//if (is_dead(data_->list->dead))
-			//	return (data);
-			dead = data_->list->dead;
-			printf("%d dead : %s\n", data_->list->ID, dead? "true":"false");
-			data_->list = data_->list->next;
-			i ++;
-		}*/
 	}
 	return (data);
 }
 
-void	end_simulation(pthread_t **thread, int nphilo)
+void	end_simulation(t_data *data, pthread_t **thread, int nphilo)
 {
 	int	i;
 	
@@ -84,9 +73,10 @@ void	end_simulation(pthread_t **thread, int nphilo)
 		pthread_join(*thread[i], NULL);
 		i ++;
 	}
-	//printf("%s===========================\n---- END OF SIMULATION ----\n===========================\n", KNRM);
+	write_output(&data->mutex, KNRM, -1, END);
+	pthread_mutex_destroy(&(data->mutex).deadm);
+	pthread_mutex_destroy(&(data->mutex).printm);
 }
-
 
 //Creation des threads (le surveillant + autant que de philos)
 void	start_simulation(t_data *data)
@@ -98,10 +88,8 @@ void	start_simulation(t_data *data)
 
 	nphilo = data->nphilo;
 	write_output(&data->mutex, KNRM, -1, START);
-	//printf("%s===========================\n--- START OF SIMULATION ---\n===========================\n", KNRM);
 	/*monitoring = malloc(sizeof(pthread_t *));
-	pthread_create(monitoring, NULL, monitor, data);
-	//pthread_join(*monitoring, NULL);	NOPE*/
+	pthread_create(monitoring, NULL, monitor, data);*/
 	thread = (pthread_t **)malloc((data->nphilo + 1) * sizeof(pthread_t *));
 	if (!thread)
 		return ;
@@ -113,21 +101,18 @@ void	start_simulation(t_data *data)
 			return;
 		if (pthread_create(thread[i], NULL, routine, data))
 			return ;
-		//printf("%s ID : %d\n", KWHT, data->list->ID);
-		//pthread_join(*thread[i], NULL); NOPE car fait attendre que le premier soit mort avant de lancer le suivant etc.
 		data->list = data->list->next;
 		i ++;
 	}
-	if (data->dead)
+	if (has_simulation_ended(data))
 	{
-		end_simulation(thread, nphilo);
-		write_output(&data->mutex, KNRM, -1, END);
+		end_simulation(data, thread, nphilo);
 	}
 }
 
 //pthread_create = cree un thread en lancant la fonction passee en argument, retourne un ID. Arguments: un pointeur sur un phtread_t (prendra la valeur de l'ID?), des parametres(?) generalement set a NULL, une fonction qui prend et retourne strictement un pointeur sur void, et l'argument en question?? qu'on peut set a NULL. 
 //pthread_detach
-//pthread_join = le process qui l'appelle attend que le thread passe en argument ait termine avant de poursuivre son propre flow.
+//pthread_join = le process qui l'appelle attend que le thread passe en argument ait termine avant de poursuivre son propre flow. Ne pas le mettre juste après le create parce que fait attendre le main jusqu'à ce que le thread soit fini.
 //pthread_mutex_init
 //pthread_mutex_destroy
 //pthread_mutex_lock

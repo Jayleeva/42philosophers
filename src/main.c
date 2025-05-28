@@ -26,7 +26,7 @@ t_philo	*create_list(int nphilo)
 		return (NULL);
 	init_philo(head);
 	current = head;
-	i = 0;
+	i = 1;
 	while (i < nphilo)
 	{
 		while (current->next)
@@ -49,6 +49,10 @@ void	init_data(t_data *data)
 	data->time_to_sleep = 0;
 	data->meals_min = -1;
 	data->dead = FALSE;
+	if (pthread_mutex_init(&(data->mutex).deadm, NULL))
+		return ;
+	if (pthread_mutex_init(&(data->mutex).printm, NULL))
+		return ;
 }
 
 int	main(int argc, char **argv)

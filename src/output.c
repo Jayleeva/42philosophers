@@ -2,6 +2,7 @@
 
 void    write_output(t_mutex *mutex, char *color, int philo, char *action)
 {
+    //(void)mutex;
     pthread_mutex_lock(&mutex->printm);
     if (philo == -1)
         printf("%s%s\n", KNRM, action);
