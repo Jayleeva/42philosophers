@@ -1,5 +1,5 @@
 
-Projet de groupe du 4ème cercle du cursus 42 
+Projet du 4ème cercle du cursus 42 
 
 # Stratégie
 1. Créer les fonctions correspondant aux 3(4?) actions possibles: réfléchir, manger, dormir (, mourir?)
@@ -10,18 +10,18 @@ Projet de groupe du 4ème cercle du cursus 42
 6. Affiner la fonction "manger" avec la recherche de fourchettes et les mutex.
 
 # Threads
-En utilisant des threads, on peut "diviser le travail" dans un meme programme pour qu'il s'execute plus rapidement.
-## Creation d'un thread
+En utilisant des threads, on peut "diviser le travail" dans un même programme pour qu'il s'exécute plus rapidement.
+## Création d'un thread
 ```
 pthread_t   thread;
 
 pthread_create(&thread, param, function, (void *)arg);
 ```
-Le premier argument doit etre un pointeur sur pthread_t. Il faut donc en declarer voir l'allouer avant d'appeler pthread_create().
-Le ``param`` est generalement set a NULL.
-L'``arg`` peut etre NULL egalement. C'est ce qui sera envoye en argument a la ``function``.
+Le premier argument doit être un pointeur sur pthread_t. Il faut donc en déclarer un avant d'appeler **pthread_create().**
+Le ``param`` est généralement set à NULL.
+L'``arg`` peut être NULL également. C'est ce qui sera envoyé en argument à la ``function``.
 
-**REMARQUE:** La fonction lancee par ``pthread_create`` recoit ET retourne strictement un pointeur sur void.
+**REMARQUE:** La fonction lancée par ``pthread_create`` reçoit ET retourne strictement un pointeur sur void.
 
 ## Faire attendre qu'un thread soit fini avant de poursuivre
 ```
