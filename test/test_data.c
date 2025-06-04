@@ -115,6 +115,7 @@ void	*routine(void *data)
 			data_->target->txt = strdup("hello");
 			data_->mission_done = 1;
 			write_output(data_, "AFTER :", 1);
+			write_output(data_, "--- MISSION DONE ---\n", 0);
 		}
 		pthread_mutex_unlock(&(data_->target)->mutex);
 		write_output(data_, "has unlocked target\n", 0);	

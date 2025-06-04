@@ -79,12 +79,16 @@ int	has_ended(t_data *data)
 {
 	if (data->mission_done)
 	//if (!strncmp(data->target->txt, "hello", 5))
+	{
+		printf("END\n");
 		return (1);
+	}
 	return (0);
 }
 
 void	write_output(t_philo *philo, char *msg, int type) 
 {
+	printf("philo ID : %d\n", philo->id);
 	pthread_mutex_lock(&(philo->data->output)->pmutex);
 	philo->data->output->msg = msg;
 	if (type == 1)
@@ -98,25 +102,24 @@ void	*routine(void *philo)
 {
 	t_philo	*philo_;
 
-	write(1, "-A-\n", 4);	
 	philo_ = (t_philo *)philo;
 	write_output(philo_, "entered 'routine'\n", 0);
 	while (!has_ended(philo_->data))
 	{
 		write_output(philo_, "has entered loop\n", 0);
-		//pthread_mutex_lock(&(philo_->data->target)->mutex);
-		//write_output(philo_, "has locked target\n", 0);
+		pthread_mutex_lock(&(philo_->data->target)->mutex);
+		write_output(philo_, "has locked target\n", 0);
 		
 		if (!strncmp(philo_->data->target->txt, "salut", 5))
 		{
 			write_output(philo_, "BEFORE :", 1);
-			//philo_->data->target->txt = strdup("hello");
-			philo_->data->txt = strdup("hello");
+			philo_->data->target->txt = strdup("hello");
 			philo_->data->mission_done = 1;
 			write_output(philo_, "AFTER :", 1);
+			write_output(philo_, "--- MISSION DONE ---\n", 0);
 		}
-		//pthread_mutex_unlock(&(philo_->data->target)->mutex);
-		//write_output(philo_, "has unlocked target\n", 0);	
+		pthread_mutex_unlock(&(philo_->data->target)->mutex);
+		write_output(philo_, "has unlocked target\n", 0);	
 	}
 	write_output(philo_, "exited loop\n", 0);
 	return (philo_);
@@ -126,36 +129,45 @@ int	main(void)
 {
 	t_philo 	*list;
 	t_data		data;
+	t_target	target;
+	t_output	output;
+
 
 	pthread_t	thread0;
 	pthread_t	thread1;
 	pthread_t	thread2;
 
 	data.nphilo = 3;
-	data.txt = strdup("salut");
+	data.target = &target;
+	data.output = &output;
+	data.target->txt = strdup("salut");
 	data.mission_done = 0;
 	list = create_list(data.nphilo);
 	if (!list)
 		return (1);
 	data.list = list;
 	list->data = &data;
-	
-	/*if (pthread_mutex_init(&(data.output)->pmutex, NULL) == -1)
+	printf("--- ID : %d ---\n", list->id);
+	if (pthread_mutex_init(&(data.output)->pmutex, NULL) == -1)
 	{
 		printf("failed mutex init\n");
 		return (1);
 	}
-	if (pthread_mutex_init(&(list->data->target)->mutex, NULL) == -1)
+	if (pthread_mutex_init(&(data.target)->mutex, NULL) == -1)
 	{
 		printf("failed mutex init\n");
 		return (1);
-	}*/
+	}
 	if (pthread_create(&thread0, NULL, routine, &list))
 		return (1);
 	list = list->next;
+	list->data = &data;
+	printf("--- ID : %d ---\n", list->id);
 	if (pthread_create(&thread1, NULL, routine, &list))
 		return (1);
 	list = list->next;
+	list->data = &data;
+	printf("--- ID : %d ---\n", list->id);
 	if (pthread_create(&thread2, NULL, routine, &list))
 		return (1);
 	list = list->next;
@@ -163,7 +175,7 @@ int	main(void)
 	pthread_join(thread0, NULL);
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
-	//pthread_mutex_destroy(&(list->data->target)->mutex);
-	//pthread_mutex_destroy(&(list->data->output)->pmutex);
+	pthread_mutex_destroy(&(data.target)->mutex);
+	pthread_mutex_destroy(&(data.output)->pmutex);
 	return (0);
 }
