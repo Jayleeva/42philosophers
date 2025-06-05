@@ -89,7 +89,10 @@ int	has_ended(t_data *data)
 void	write_output(t_philo *philo, char *msg, int type) 
 {
 	printf("philo ID : %d\n", philo->id);
-	pthread_mutex_lock(&(philo->data->output)->pmutex);
+	printf("data nphilo : %d\n", philo->data->nphilo);
+	printf("data msg : %s\n", philo->data->output->msg);
+	pthread_mutex_lock(&(philo->data->output)->pmutex); // segfault...
+	
 	philo->data->output->msg = msg;
 	if (type == 1)
 		printf("%d %s %s\n", philo->id, philo->data->output->msg, philo->data->target->txt);
@@ -113,7 +116,7 @@ void	*routine(void *philo)
 		if (!strncmp(philo_->data->target->txt, "salut", 5))
 		{
 			write_output(philo_, "BEFORE :", 1);
-			philo_->data->target->txt = strdup("hello");
+			philo_->data->target->txt = strdup("adieu");
 			philo_->data->mission_done = 1;
 			write_output(philo_, "AFTER :", 1);
 			write_output(philo_, "--- MISSION DONE ---\n", 0);
@@ -138,16 +141,10 @@ int	main(void)
 	pthread_t	thread2;
 
 	data.nphilo = 3;
-	data.target = &target;
-	data.output = &output;
-	data.target->txt = strdup("salut");
 	data.mission_done = 0;
-	list = create_list(data.nphilo);
-	if (!list)
-		return (1);
-	data.list = list;
-	list->data = &data;
-	printf("--- ID : %d ---\n", list->id);
+	data.output = &output;
+	data.target = &target;
+	data.target->txt = strdup("salut");
 	if (pthread_mutex_init(&(data.output)->pmutex, NULL) == -1)
 	{
 		printf("failed mutex init\n");
@@ -158,16 +155,24 @@ int	main(void)
 		printf("failed mutex init\n");
 		return (1);
 	}
+	list = create_list(data.nphilo);
+	if (!list)
+		return (1);
+	data.list = list;
+	list->data = &data;
+	printf("--- list ID : %d ; data ID : %d ---\n", list->id, data.list->id);
 	if (pthread_create(&thread0, NULL, routine, &list))
 		return (1);
 	list = list->next;
 	list->data = &data;
-	printf("--- ID : %d ---\n", list->id);
+	data.list = data.list->next;
+	printf("--- list ID : %d ; data ID : %d ---\n", list->id, data.list->id);
 	if (pthread_create(&thread1, NULL, routine, &list))
 		return (1);
 	list = list->next;
 	list->data = &data;
-	printf("--- ID : %d ---\n", list->id);
+	data.list = data.list->next;
+	printf("--- list ID : %d ; data ID : %d ---\n", list->id, data.list->id);
 	if (pthread_create(&thread2, NULL, routine, &list))
 		return (1);
 	list = list->next;

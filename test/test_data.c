@@ -112,7 +112,7 @@ void	*routine(void *data)
 		if (!strncmp(data_->target->txt, "salut", 5))
 		{
 			write_output(data_, "BEFORE :", 1);
-			data_->target->txt = strdup("hello");
+			data_->target->txt = strdup("adieu");
 			data_->mission_done = 1;
 			write_output(data_, "AFTER :", 1);
 			write_output(data_, "--- MISSION DONE ---\n", 0);
