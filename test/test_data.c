@@ -78,7 +78,6 @@ t_philo	*create_list(int nphilo)
 int	has_ended(t_data *data)
 {
 	if (data->mission_done)
-	//if (!strncmp(data->target->txt, "hello", 5))
 		return (1);
 	return (0);
 }

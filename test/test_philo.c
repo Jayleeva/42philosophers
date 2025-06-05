@@ -78,7 +78,6 @@ t_philo	*create_list(int nphilo)
 int	has_ended(t_data *data)
 {
 	if (data->mission_done)
-	//if (!strncmp(data->target->txt, "hello", 5))
 	{
 		printf("END\n");
 		return (1);
@@ -88,11 +87,7 @@ int	has_ended(t_data *data)
 
 void	write_output(t_philo *philo, char *msg, int type) 
 {
-	printf("philo ID : %d\n", philo->id);
-	printf("data nphilo : %d\n", philo->data->nphilo);
-	printf("data msg : %s\n", philo->data->output->msg);
-	pthread_mutex_lock(&(philo->data->output)->pmutex); // segfault...
-	
+	pthread_mutex_lock(&(philo->data->output)->pmutex);
 	philo->data->output->msg = msg;
 	if (type == 1)
 		printf("%d %s %s\n", philo->id, philo->data->output->msg, philo->data->target->txt);
@@ -160,20 +155,17 @@ int	main(void)
 		return (1);
 	data.list = list;
 	list->data = &data;
-	printf("--- list ID : %d ; data ID : %d ---\n", list->id, data.list->id);
-	if (pthread_create(&thread0, NULL, routine, &list))
+	if (pthread_create(&thread0, NULL, routine, list))
 		return (1);
 	list = list->next;
 	list->data = &data;
 	data.list = data.list->next;
-	printf("--- list ID : %d ; data ID : %d ---\n", list->id, data.list->id);
-	if (pthread_create(&thread1, NULL, routine, &list))
+	if (pthread_create(&thread1, NULL, routine, list))
 		return (1);
 	list = list->next;
 	list->data = &data;
 	data.list = data.list->next;
-	printf("--- list ID : %d ; data ID : %d ---\n", list->id, data.list->id);
-	if (pthread_create(&thread2, NULL, routine, &list))
+	if (pthread_create(&thread2, NULL, routine, list))
 		return (1);
 	list = list->next;
 	
