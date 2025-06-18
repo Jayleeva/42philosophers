@@ -4,9 +4,21 @@
 #include <string.h>
 #include <pthread.h>
 
+typedef unsigned char	t_bool;
+# define TRUE 1
+# define FALSE 0
+
+/*typedef struct s_fork
+{
+	t_bool			fork_free;
+	pthread_mutex_t	fmutex;
+}				t_fork;*/
+
 typedef struct s_philo
 {
 	int				id;
+	t_bool			fork_free;
+	pthread_mutex_t	fmutex;
 	struct s_philo	*next;
 	struct s_data	*data;
 }					t_philo;
@@ -38,7 +50,13 @@ void	init_philo(t_philo *current)
 	static int	i = 1;
 
 	current->id = i;
+	current->fork_free = TRUE;
 	current->next = NULL;
+	if (pthread_mutex_init(&(current->fmutex), NULL) == -1)
+	{
+		printf("failed mutex init\n");
+		return ;
+	}
 	i ++;
 }
 
@@ -98,19 +116,47 @@ void	*routine(void *philo)
 	while (!has_ended(philo_->data))
 	{
 		write_output(philo_, "has entered loop\n", 0);
-		pthread_mutex_lock(&(philo_->data->target)->mutex);
-		write_output(philo_, "has locked target\n", 0);
-		
-		if (!strncmp(philo_->data->target->txt, "salut", 5))
+		if (philo_->fork_free == TRUE && philo_->next->fork_free == TRUE)
 		{
-			write_output(philo_, "BEFORE :", 1);
-			philo_->data->target->txt = strdup("adieu");
-			philo_->data->mission_done = 1;
-			write_output(philo_, "AFTER :", 1);
-			write_output(philo_, "--- MISSION DONE ---\n", 0);
+			if (pthread_mutex_lock(&(philo_->fmutex)))			// besoin de vérifier si possible de lock? que faire si peut pas? attendre?
+			{
+				write_output(philo_, "couldn't lock own fork\n", 0);
+				usleep(1000);
+			}	
+			philo_->fork_free = FALSE;
+			write_output(philo_, "has locked own fork\n", 0);
+			if (pthread_mutex_lock(&(philo_->next->fmutex))) 	// comment faire attendre et réessayer de lock?
+			{
+				write_output(philo_, "couldn't lock next fork\n", 0);
+				pthread_mutex_unlock(&(philo_->fmutex));
+				philo_->fork_free = TRUE;
+				write_output(philo_, "has unlocked own fork\n", 0);
+				usleep(1000);
+			}
+			else
+			{
+				philo_->next->fork_free = FALSE;
+				write_output(philo_, "has locked next fork\n", 0);
+				pthread_mutex_lock(&(philo_->data->target)->mutex);
+				if (!strncmp(philo_->data->target->txt, "salut", 5))
+				{
+					write_output(philo_, "BEFORE :", 1);
+					philo_->data->target->txt = strdup("adieu");
+					philo_->data->mission_done = 1;
+					write_output(philo_, "AFTER :", 1);
+					write_output(philo_, "--- MISSION DONE ---\n", 0);
+					pthread_mutex_unlock(&(philo_->data->target)->mutex);
+				}
+				pthread_mutex_unlock(&(philo_->next->fmutex));
+				philo_->next->fork_free = TRUE;
+				write_output(philo_, "has unlocked next fork\n", 0);
+				pthread_mutex_unlock(&(philo_->fmutex));
+				philo_->fork_free = TRUE;
+				write_output(philo_, "has unlocked own fork\n", 0);
+			}
 		}
-		pthread_mutex_unlock(&(philo_->data->target)->mutex);
-		write_output(philo_, "has unlocked target\n", 0);	
+		else
+			usleep(1000);
 	}
 	write_output(philo_, "exited loop\n", 0);
 	return (philo_);
@@ -132,9 +178,12 @@ int	main(int argc, char **argv)
 	data.output = &output;
 	data.target = &target;
 	data.target->txt = strdup("salut");
-	thread = (pthread_t **)malloc((data.nphilo + 1) * sizeof(pthread_t *));
-	if (!thread)
-		return 1;
+	
+	list = create_list(data.nphilo);
+	if (!list)
+		return (1);
+	data.list = list;
+	list->data = &data;
 	if (pthread_mutex_init(&(data.output)->pmutex, NULL) == -1)
 	{
 		printf("failed mutex init\n");
@@ -145,12 +194,10 @@ int	main(int argc, char **argv)
 		printf("failed mutex init\n");
 		return (1);
 	}
-	list = create_list(data.nphilo);
-	if (!list)
-		return (1);
-	data.list = list;
-	list->data = &data;
 
+	thread = (pthread_t **)malloc((data.nphilo + 1) * sizeof(pthread_t *));
+	if (!thread)
+		return 1;
 	i = 0;
 	while (i < data.nphilo)
 	{
@@ -165,12 +212,17 @@ int	main(int argc, char **argv)
 		i ++;
 	}
 	i = 0;
+	t_philo	*current;
+	current = data.list;
 	while (i < data.nphilo)
 	{
 		pthread_join(*thread[i], NULL);
+		pthread_mutex_destroy(&(current->fmutex));
+		current = current->next;
 		i ++;
 	}
 	pthread_mutex_destroy(&(data.target)->mutex);
 	pthread_mutex_destroy(&(data.output)->pmutex);
+	
 	return (0);
 }
