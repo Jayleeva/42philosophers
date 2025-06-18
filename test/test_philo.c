@@ -19,6 +19,8 @@ typedef struct s_philo
 	int				id;
 	t_bool			fork_free;
 	pthread_mutex_t	fmutex;
+	int				nmeal;
+	int				last_meal;
 	struct s_philo	*next;
 	struct s_data	*data;
 }					t_philo;
@@ -26,8 +28,9 @@ typedef struct s_philo
 typedef struct s_target
 {
 	char			*txt;
-	int				n;
+	//int				n;
 	int				goal;
+	int				limit;
 	pthread_mutex_t	mutex;
 }					t_target;
 
@@ -41,6 +44,7 @@ typedef struct s_data
 {
 	int				nphilo;
 	int				mission_done;
+	int				death;
 	char			*txt;
 	t_philo			*list;
 	t_target		*target;
@@ -53,6 +57,8 @@ void	init_philo(t_philo *current)
 
 	current->id = i;
 	current->fork_free = TRUE;
+	current->last_meal = 0;
+	current->nmeal = 0;
 	current->next = NULL;
 	if (pthread_mutex_init(&(current->fmutex), NULL) == -1)
 	{
@@ -90,12 +96,31 @@ t_philo	*create_list(int nphilo)
 
 int	has_ended(t_data *data)
 {
-	if (data->mission_done)
+	t_philo	*current;
+	int		i = 0;
+
+	current = data->list;
+	if (data->death)
 	{
-		printf("END\n");
+		printf("END BY DEATH\n");
 		return (1);
 	}
-	return (0);
+	else
+	{
+		if (data->target->goal > -1)
+		{
+			while (i < data->nphilo)
+			{
+				if (current->nmeal < data->target->goal)
+					return (0);
+				current = current->next;
+				i ++;
+			}
+			printf("END BY MEALS\n");
+			return (1);
+		}
+		return (0);
+	}
 }
 
 void	write_output(t_philo *philo, char *msg, int type) 
@@ -103,7 +128,7 @@ void	write_output(t_philo *philo, char *msg, int type)
 	pthread_mutex_lock(&(philo->data->output)->pmutex);
 	philo->data->output->msg = msg;
 	if (type == 1)
-		printf("%d %s %d\n", philo->id, philo->data->output->msg, philo->data->target->n);
+		printf("%d %s %d\n", philo->id, philo->data->output->msg, philo->nmeal);
 	else
 		printf("%d %s", philo->id, philo->data->output->msg);
 	pthread_mutex_unlock(&(philo->data->output)->pmutex);
@@ -140,17 +165,17 @@ void	*routine(void *philo)
 				philo_->next->fork_free = FALSE;
 				write_output(philo_, "has locked next fork\n", 0);
 				pthread_mutex_lock(&(philo_->data->target)->mutex);
-				if (philo_->data->target->n < philo_->data->target->goal)
-				{
+				//if (philo_->nmeal < philo_->data->target->goal)
+				//{
 					write_output(philo_, "BEFORE :", 1);
-					philo_->data->target->n ++;
+					philo_->nmeal ++;
 					write_output(philo_, "AFTER :", 1);
-					if (philo_->data->target->n == philo_->data->target->goal)
-					{
-						philo_->data->mission_done = 1;
-						write_output(philo_, "--- MISSION DONE ---\n", 0);
-					}
-				}
+				//}
+				/*else
+				{
+					philo_->data->death = 1;
+					write_output(philo_, "--- DEATH ---\n", 0);
+				}*/
 				pthread_mutex_unlock(&(philo_->data->target)->mutex);
 				pthread_mutex_unlock(&(philo_->next->fmutex));
 				philo_->next->fork_free = TRUE;
@@ -177,16 +202,19 @@ int	main(int argc, char **argv)
 	t_target	target;
 	t_output	output;
 
-	if (argc != 3)
+	if (argc < 2 || argc > 3)
 		return 1;
+
 	data.nphilo = atoi(argv[1]);
-	
 	data.mission_done = 0;
+	data.death = 0;
 	data.output = &output;
 	data.target = &target;
-	//data.target->txt = strdup("salut");
-	data.target->n = 0;
-	data.target->goal = atoi(argv[2]);
+	if (argc == 3)
+		data.target->goal = atoi(argv[2]);
+	else
+		data.target->goal = -1;
+	//data.target->limit = atoi(argv[2]);
 
 	list = create_list(data.nphilo);
 	if (!list)
