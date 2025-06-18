@@ -26,6 +26,8 @@ typedef struct s_philo
 typedef struct s_target
 {
 	char			*txt;
+	int				n;
+	int				goal;
 	pthread_mutex_t	mutex;
 }					t_target;
 
@@ -101,7 +103,7 @@ void	write_output(t_philo *philo, char *msg, int type)
 	pthread_mutex_lock(&(philo->data->output)->pmutex);
 	philo->data->output->msg = msg;
 	if (type == 1)
-		printf("%d %s %s\n", philo->id, philo->data->output->msg, philo->data->target->txt);
+		printf("%d %s %d\n", philo->id, philo->data->output->msg, philo->data->target->n);
 	else
 		printf("%d %s", philo->id, philo->data->output->msg);
 	pthread_mutex_unlock(&(philo->data->output)->pmutex);
@@ -138,15 +140,18 @@ void	*routine(void *philo)
 				philo_->next->fork_free = FALSE;
 				write_output(philo_, "has locked next fork\n", 0);
 				pthread_mutex_lock(&(philo_->data->target)->mutex);
-				if (!strncmp(philo_->data->target->txt, "salut", 5))
+				if (philo_->data->target->n < philo_->data->target->goal)
 				{
 					write_output(philo_, "BEFORE :", 1);
-					philo_->data->target->txt = strdup("adieu");
-					philo_->data->mission_done = 1;
+					philo_->data->target->n ++;
 					write_output(philo_, "AFTER :", 1);
-					write_output(philo_, "--- MISSION DONE ---\n", 0);
-					pthread_mutex_unlock(&(philo_->data->target)->mutex);
+					if (philo_->data->target->n == philo_->data->target->goal)
+					{
+						philo_->data->mission_done = 1;
+						write_output(philo_, "--- MISSION DONE ---\n", 0);
+					}
 				}
+				pthread_mutex_unlock(&(philo_->data->target)->mutex);
 				pthread_mutex_unlock(&(philo_->next->fmutex));
 				philo_->next->fork_free = TRUE;
 				write_output(philo_, "has unlocked next fork\n", 0);
@@ -154,6 +159,7 @@ void	*routine(void *philo)
 				philo_->fork_free = TRUE;
 				write_output(philo_, "has unlocked own fork\n", 0);
 			}
+			usleep(1000);
 		}
 		else
 			usleep(1000);
@@ -171,14 +177,17 @@ int	main(int argc, char **argv)
 	t_target	target;
 	t_output	output;
 
-	if (argc != 2)
+	if (argc != 3)
 		return 1;
 	data.nphilo = atoi(argv[1]);
+	
 	data.mission_done = 0;
 	data.output = &output;
 	data.target = &target;
-	data.target->txt = strdup("salut");
-	
+	//data.target->txt = strdup("salut");
+	data.target->n = 0;
+	data.target->goal = atoi(argv[2]);
+
 	list = create_list(data.nphilo);
 	if (!list)
 		return (1);
