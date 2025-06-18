@@ -143,6 +143,7 @@ void	*routine(void *philo)
 	while (!has_ended(philo_->data))
 	{
 		write_output(philo_, "has entered loop\n", 0);
+		philo_->last_meal ++;
 		if (philo_->fork_free == TRUE && philo_->next->fork_free == TRUE)
 		{
 			if (pthread_mutex_lock(&(philo_->fmutex)))			// besoin de vérifier si possible de lock? que faire si peut pas? attendre?
@@ -165,17 +166,18 @@ void	*routine(void *philo)
 				philo_->next->fork_free = FALSE;
 				write_output(philo_, "has locked next fork\n", 0);
 				pthread_mutex_lock(&(philo_->data->target)->mutex);
-				//if (philo_->nmeal < philo_->data->target->goal)
-				//{
-					write_output(philo_, "BEFORE :", 1);
-					philo_->nmeal ++;
-					write_output(philo_, "AFTER :", 1);
-				//}
-				/*else
+				write_output(philo_, "BEFORE :", 1);
+				philo_->nmeal ++;
+				write_output(philo_, "AFTER :", 1);
+				if (philo_->last_meal < philo_->data->target->limit)
+				{
+					philo_->last_meal = 0;
+				}
+				else
 				{
 					philo_->data->death = 1;
 					write_output(philo_, "--- DEATH ---\n", 0);
-				}*/
+				}
 				pthread_mutex_unlock(&(philo_->data->target)->mutex);
 				pthread_mutex_unlock(&(philo_->next->fmutex));
 				philo_->next->fork_free = TRUE;
@@ -202,7 +204,7 @@ int	main(int argc, char **argv)
 	t_target	target;
 	t_output	output;
 
-	if (argc < 2 || argc > 3)
+	if (argc < 3 || argc > 4)
 		return 1;
 
 	data.nphilo = atoi(argv[1]);
@@ -210,11 +212,11 @@ int	main(int argc, char **argv)
 	data.death = 0;
 	data.output = &output;
 	data.target = &target;
-	if (argc == 3)
-		data.target->goal = atoi(argv[2]);
+	data.target->limit = atoi(argv[2]);
+	if (argc == 4)
+		data.target->goal = atoi(argv[3]);
 	else
 		data.target->goal = -1;
-	//data.target->limit = atoi(argv[2]);
 
 	list = create_list(data.nphilo);
 	if (!list)
