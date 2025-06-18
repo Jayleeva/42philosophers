@@ -8,15 +8,8 @@ typedef struct s_philo
 {
 	int				id;
 	struct s_philo	*next;
-	//pthread_mutex_t	imutex;
 	struct s_data	*data;
 }					t_philo;
-
-/*typedef struct s_list
-{
-	t_philo			*philo;
-	pthread_mutex_t	*lmutex;
-}					t_list;*/
 
 typedef struct s_target
 {
@@ -123,23 +116,25 @@ void	*routine(void *philo)
 	return (philo_);
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
+	int			i;
+	pthread_t	**thread;
 	t_philo 	*list;
 	t_data		data;
 	t_target	target;
 	t_output	output;
 
-
-	pthread_t	thread0;
-	pthread_t	thread1;
-	pthread_t	thread2;
-
-	data.nphilo = 3;
+	if (argc != 2)
+		return 1;
+	data.nphilo = atoi(argv[1]);
 	data.mission_done = 0;
 	data.output = &output;
 	data.target = &target;
 	data.target->txt = strdup("salut");
+	thread = (pthread_t **)malloc((data.nphilo + 1) * sizeof(pthread_t *));
+	if (!thread)
+		return 1;
 	if (pthread_mutex_init(&(data.output)->pmutex, NULL) == -1)
 	{
 		printf("failed mutex init\n");
@@ -155,23 +150,26 @@ int	main(void)
 		return (1);
 	data.list = list;
 	list->data = &data;
-	if (pthread_create(&thread0, NULL, routine, list))
-		return (1);
-	list = list->next;
-	list->data = &data;
-	data.list = data.list->next;
-	if (pthread_create(&thread1, NULL, routine, list))
-		return (1);
-	list = list->next;
-	list->data = &data;
-	data.list = data.list->next;
-	if (pthread_create(&thread2, NULL, routine, list))
-		return (1);
-	list = list->next;
-	
-	pthread_join(thread0, NULL);
-	pthread_join(thread1, NULL);
-	pthread_join(thread2, NULL);
+
+	i = 0;
+	while (i < data.nphilo)
+	{
+		thread[i] = malloc(sizeof(pthread_t *));
+		if (!thread[i])
+			return 1;
+		if (pthread_create(thread[i], NULL, routine, list))
+			return 1;
+		list = list->next;
+		list->data = &data;
+		data.list = data.list->next;
+		i ++;
+	}
+	i = 0;
+	while (i < data.nphilo)
+	{
+		pthread_join(*thread[i], NULL);
+		i ++;
+	}
 	pthread_mutex_destroy(&(data.target)->mutex);
 	pthread_mutex_destroy(&(data.output)->pmutex);
 	return (0);
