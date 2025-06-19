@@ -37,8 +37,6 @@ typedef struct s_philo
 
 typedef struct s_target
 {
-	char			*txt;
-	//int				n;
 	int				goal;
 	int				limit;
 	pthread_mutex_t	mutex;
@@ -84,7 +82,7 @@ void	init_philo(t_philo *current)
 	current->next = NULL;
 	if (pthread_mutex_init(&(current->fmutex), NULL) == -1)
 	{
-		printf("failed mutex init\n");
+		write(2, "failed mutex init\n", 18);
 		return ;
 	}
 	i ++;
@@ -122,14 +120,11 @@ int	has_ended(t_data *data)
 	int		i = 0;
 
 	current = data->list;
-	if (data->death)
-	{
-		//printf("END BY DEATH\n");
+	if (data->death) // end by DEATH
 		return (1);
-	}
 	else
 	{
-		if (data->target->goal > -1)
+		if (data->target->goal > -1) // end by MEALS
 		{
 			while (i < data->nphilo)
 			{
@@ -138,7 +133,6 @@ int	has_ended(t_data *data)
 				current = current->next;
 				i ++;
 			}
-			//printf("END BY MEALS\n");
 			return (1);
 		}
 		return (0);
@@ -189,17 +183,14 @@ void	*routine(void *philo)
 		{
 			if (pthread_mutex_lock(&(philo_->fmutex)))
 			{
-				//write_output(philo_, "couldn't lock own fork\n", 0);
 				usleep(1000);
 			}	
 			philo_->fork_free = FALSE;
 			write_output(philo_, KGRN, "has locked own fork\n", 0);
 			if (pthread_mutex_lock(&(philo_->next->fmutex)))
 			{
-				//write_output(philo_, "couldn't lock next fork\n", 0);
 				pthread_mutex_unlock(&(philo_->fmutex));
 				philo_->fork_free = TRUE;
-				//write_output(philo_, "has unlocked own fork\n", 0);
 				usleep(1000);
 			}
 			else
@@ -212,10 +203,8 @@ void	*routine(void *philo)
 				philo_->nmeal ++;
 				pthread_mutex_unlock(&(philo_->next->fmutex));
 				philo_->next->fork_free = TRUE;
-				//write_output(philo_, "has unlocked next fork\n", 0);
 				pthread_mutex_unlock(&(philo_->fmutex));
 				philo_->fork_free = TRUE;
-				//write_output(philo_, "has unlocked own fork\n", 0);
 				a_sleep(philo_);
 			}
 		}
@@ -225,53 +214,13 @@ void	*routine(void *philo)
 	return (philo_);
 }
 
-int	main(int argc, char **argv)
+int	start_simulation(t_data *data, t_philo *list, pthread_t **thread)
 {
-	int			i;
-	pthread_t	**thread;
-	t_philo 	*list;
-	t_data		data;
-	t_target	target;
-	t_output	output;
+	int	i;
 
-	if (argc < 5 || argc > 6)
-		return 1;
-
-	data.nphilo = atoi(argv[1]);
-	data.time_to_die = atoi(argv[2]);
-	data.time_to_eat = atoi(argv[3]);
-	data.time_to_sleep = atoi(argv[4]);
-	data.mission_done = 0;
-	data.death = 0;
-	data.output = &output;
-	data.target = &target;
-	if (argc == 6)
-		data.target->goal = atoi(argv[5]);
-	else
-		data.target->goal = -1;
-
-	list = create_list(data.nphilo);
-	if (!list)
-		return (1);
-	data.list = list;
-	list->data = &data;
-	if (pthread_mutex_init(&(data.output)->pmutex, NULL) == -1)
-	{
-		printf("failed mutex init\n");
-		return (1);
-	}
-	if (pthread_mutex_init(&(data.target)->mutex, NULL) == -1)
-	{
-		printf("failed mutex init\n");
-		return (1);
-	}
-
-	thread = (pthread_t **)malloc((data.nphilo + 1) * sizeof(pthread_t *));
-	if (!thread)
-		return 1;
-	write_output(data.list, KNRM, "\n========================\n- START OF SIMULATION -\n========================\n", 1);
+	write_output(data->list, KNRM, "\n========================\n- START OF SIMULATION -\n========================\n", 1);
 	i = 0;
-	while (i < data.nphilo)
+	while (i < data->nphilo)
 	{
 		thread[i] = malloc(sizeof(pthread_t *));
 		if (!thread[i])
@@ -279,22 +228,89 @@ int	main(int argc, char **argv)
 		if (pthread_create(thread[i], NULL, routine, list))
 			return 1;
 		list = list->next;
-		list->data = &data;
-		data.list = data.list->next;
+		list->data = data;
+		data->list = data->list->next;
 		i ++;
 	}
-	i = 0;
+	return 0;
+}
+
+void	end_simulation(t_data *data, pthread_t **thread)
+{
+	int	i;
 	t_philo	*current;
-	current = data.list;
-	while (i < data.nphilo)
+	
+	i = 0;
+	current = data->list;
+	while (i < data->nphilo)
 	{
 		pthread_join(*thread[i], NULL);
 		pthread_mutex_destroy(&(current->fmutex));
 		current = current->next;
 		i ++;
 	}
-	pthread_mutex_destroy(&(data.target)->mutex);
-	pthread_mutex_destroy(&(data.output)->pmutex);
-	write_output(data.list, KNRM, "\n==========================\n--- END OF SIMULATION ---\n==========================\n", 1);
+	pthread_mutex_destroy(&(data->target)->mutex);
+	pthread_mutex_destroy(&(data->output)->pmutex);
+	write_output(data->list, KNRM, "\n==========================\n--- END OF SIMULATION ---\n==========================\n", 1);
+}
+
+int	init_mutex(t_data *data)
+{
+	if (pthread_mutex_init(&(data->output)->pmutex, NULL) == -1)
+	{
+		printf("failed mutex init\n");
+		return (1);
+	}
+	if (pthread_mutex_init(&(data->target)->mutex, NULL) == -1)
+	{
+		printf("failed mutex init\n");
+		return (1);
+	}
+	return 0;
+}
+
+int	init_data(int argc, char **argv, t_data *data)
+{
+	t_target	target;
+	t_output	output;
+	
+	data->nphilo = atoi(argv[1]);
+	data->time_to_die = atoi(argv[2]);
+	data->time_to_eat = atoi(argv[3]);
+	data->time_to_sleep = atoi(argv[4]);
+	data->mission_done = 0;
+	data->death = 0;
+	data->output = &output;
+	data->target = &target;
+	if (argc == 6)
+		data->target->goal = atoi(argv[5]);
+	else
+		data->target->goal = -1;
+	return 0;
+}
+
+int	main(int argc, char **argv)
+{
+	t_philo 	*list;
+	t_data		data;
+	pthread_t	**thread;
+
+	if (argc < 5 || argc > 6)
+		return 1;
+	if (init_data(argc, argv, &data))
+		return 1;
+	list = create_list(data.nphilo);
+	if (!list)
+		return (1);
+	data.list = list;
+	list->data = &data;
+	if (init_mutex(&data))
+		return 1;
+	thread = (pthread_t **)malloc((data.nphilo + 1) * sizeof(pthread_t *));
+	if (!thread)
+		return 1;
+	if (start_simulation(&data, list, thread))
+		return 1;
+	end_simulation(&data, thread);
 	return (0);
 }
