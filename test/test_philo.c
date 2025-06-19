@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <sys/time.h>
 
 typedef unsigned char	t_bool;
 # define TRUE 1
@@ -20,7 +21,7 @@ typedef struct s_philo
 	t_bool			fork_free;
 	pthread_mutex_t	fmutex;
 	int				nmeal;
-	int				last_meal;
+	time_t			last_meal;
 	struct s_philo	*next;
 	struct s_data	*data;
 }					t_philo;
@@ -43,6 +44,9 @@ typedef struct s_output
 typedef struct s_data
 {
 	int				nphilo;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
 	int				mission_done;
 	int				death;
 	char			*txt;
@@ -50,6 +54,15 @@ typedef struct s_data
 	t_target		*target;
 	t_output		*output;
 }					t_data;
+
+time_t	get_time(void)
+{
+	struct timeval	time;
+
+	if (gettimeofday(&time, NULL) == -1)
+		write(2, "gettimeofday() error\n", 22);
+	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
+}
 
 void	init_philo(t_philo *current)
 {
@@ -128,10 +141,23 @@ void	write_output(t_philo *philo, char *msg, int type)
 	pthread_mutex_lock(&(philo->data->output)->pmutex);
 	philo->data->output->msg = msg;
 	if (type == 1)
-		printf("%d %s %d\n", philo->id, philo->data->output->msg, philo->nmeal);
+		printf("%ld %d %s %d\n", get_time(), philo->id, philo->data->output->msg, philo->nmeal);
 	else
-		printf("%d %s", philo->id, philo->data->output->msg);
+		printf("%ld %d %s", get_time(), philo->id, philo->data->output->msg);
 	pthread_mutex_unlock(&(philo->data->output)->pmutex);
+}
+
+void	a_sleep(t_philo *philo)
+{
+	if (!has_ended(philo->data))
+	{
+		write_output(philo, "is sleeping\n", 0);
+		usleep(philo->data->time_to_sleep * 1000);
+		if (!has_ended(philo->data))
+			write_output(philo, "is thinking\n", 0);
+	}
+	else
+		return ;
 }
 
 void	*routine(void *philo)
@@ -139,11 +165,20 @@ void	*routine(void *philo)
 	t_philo	*philo_;
 
 	philo_ = (t_philo *)philo;
-	write_output(philo_, "entered 'routine'\n", 0);
+	//write_output(philo_, "entered 'routine'\n", 0);
+	philo_->last_meal = get_time();
+	if (philo_->id % 2 == 0)
+		a_sleep(philo_);
 	while (!has_ended(philo_->data))
 	{
-		write_output(philo_, "has entered loop\n", 0);
-		philo_->last_meal ++;
+		//write_output(philo_, "has entered loop\n", 0);
+		if (get_time() - philo_->last_meal >= philo_->data->time_to_die)
+		{
+			philo_->data->death = 1;
+			//write_output(philo_, "--- DEATH ---\n", 0);
+			write_output(philo_, "died\n", 0);
+			return (philo_);
+		}
 		if (philo_->fork_free == TRUE && philo_->next->fork_free == TRUE)
 		{
 			if (pthread_mutex_lock(&(philo_->fmutex)))			// besoin de vérifier si possible de lock? que faire si peut pas? attendre?
@@ -165,33 +200,23 @@ void	*routine(void *philo)
 			{
 				philo_->next->fork_free = FALSE;
 				write_output(philo_, "has locked next fork\n", 0);
-				pthread_mutex_lock(&(philo_->data->target)->mutex);
-				write_output(philo_, "BEFORE :", 1);
+				write_output(philo_, "is eating\n", 0);
+				philo_->last_meal = get_time();
+				usleep(philo_->data->time_to_eat * 1000);
 				philo_->nmeal ++;
-				write_output(philo_, "AFTER :", 1);
-				if (philo_->last_meal < philo_->data->target->limit)
-				{
-					philo_->last_meal = 0;
-				}
-				else
-				{
-					philo_->data->death = 1;
-					write_output(philo_, "--- DEATH ---\n", 0);
-				}
-				pthread_mutex_unlock(&(philo_->data->target)->mutex);
 				pthread_mutex_unlock(&(philo_->next->fmutex));
 				philo_->next->fork_free = TRUE;
 				write_output(philo_, "has unlocked next fork\n", 0);
 				pthread_mutex_unlock(&(philo_->fmutex));
 				philo_->fork_free = TRUE;
 				write_output(philo_, "has unlocked own fork\n", 0);
+				a_sleep(philo_);
 			}
-			usleep(1000);
 		}
 		else
 			usleep(1000);
 	}
-	write_output(philo_, "exited loop\n", 0);
+	//write_output(philo_, "exited loop\n", 0);
 	return (philo_);
 }
 
@@ -204,17 +229,19 @@ int	main(int argc, char **argv)
 	t_target	target;
 	t_output	output;
 
-	if (argc < 3 || argc > 4)
+	if (argc < 5 || argc > 6)
 		return 1;
 
 	data.nphilo = atoi(argv[1]);
+	data.time_to_die = atoi(argv[2]);
+	data.time_to_eat = atoi(argv[3]);
+	data.time_to_sleep = atoi(argv[4]);
 	data.mission_done = 0;
 	data.death = 0;
 	data.output = &output;
 	data.target = &target;
-	data.target->limit = atoi(argv[2]);
-	if (argc == 4)
-		data.target->goal = atoi(argv[3]);
+	if (argc == 6)
+		data.target->goal = atoi(argv[5]);
 	else
 		data.target->goal = -1;
 
@@ -262,6 +289,5 @@ int	main(int argc, char **argv)
 	}
 	pthread_mutex_destroy(&(data.target)->mutex);
 	pthread_mutex_destroy(&(data.output)->pmutex);
-	
 	return (0);
 }
