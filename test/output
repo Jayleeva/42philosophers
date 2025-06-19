@@ -1,34 +1,30 @@
-1750338492011 1 has locked own fork
-1750338492011 1 has locked next fork
-1750338492011 1 is eating
-1750338492011 2 is sleeping
-1750338492011 3 has locked own fork
-1750338492011 3 has locked next fork
-1750338492011 3 is eating
-1750338492011 4 is sleeping
-1750338492211 2 is thinking
-1750338492211 1 has unlocked next fork
-1750338492211 1 has unlocked own fork
-1750338492211 1 is sleeping
-1750338492211 4 is thinking
-1750338492211 3 has unlocked next fork
-1750338492211 3 has unlocked own fork
-1750338492211 3 is sleeping
-1750338492212 2 has locked own fork
-1750338492212 2 has locked next fork
-1750338492212 2 is eating
-1750338492212 4 has locked own fork
-1750338492212 4 has locked next fork
-1750338492212 4 is eating
-1750338492411 3 is thinking
-1750338492411 3 died
-END BY DEATH
-END BY DEATH
-1750338492412 4 has unlocked next fork
-1750338492412 4 has unlocked own fork
-END BY DEATH
-END BY DEATH
-1750338492413 2 has unlocked next fork
-1750338492413 2 has unlocked own fork
-END BY DEATH
-END BY DEATH
+[0m
+========================
+- START OF SIMULATION -
+========================
+
+[32m1750340565959 1 has locked own fork
+[32m1750340565959 1 has locked next fork
+[32m1750340565959 1 is eating
+[35m1750340565959 2 is sleeping
+[32m1750340565959 3 has locked own fork
+[32m1750340565959 3 has locked next fork
+[32m1750340565959 3 is eating
+[35m1750340565959 4 is sleeping
+[36m1750340566159 2 is thinking
+[35m1750340566159 3 is sleeping
+[35m1750340566159 1 is sleeping
+[32m1750340566159 2 has locked own fork
+[32m1750340566159 2 has locked next fork
+[32m1750340566159 2 is eating
+[36m1750340566159 4 is thinking
+[32m1750340566159 4 has locked own fork
+[32m1750340566159 4 has locked next fork
+[32m1750340566159 4 is eating
+[36m1750340566359 3 is thinking
+[31m1750340566359 3 died
+[0m
+==========================
+--- END OF SIMULATION ---
+==========================
+

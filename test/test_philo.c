@@ -9,6 +9,15 @@ typedef unsigned char	t_bool;
 # define TRUE 1
 # define FALSE 0
 
+# define KNRM  "\x1B[0m"
+# define KRED  "\x1B[31m"
+# define KGRN  "\x1B[32m"
+# define KYEL  "\x1B[33m"
+# define KBLU  "\x1B[34m"
+# define KMAG  "\x1B[35m"
+# define KCYN  "\x1B[36m"
+# define KWHT  "\x1B[37m"
+
 /*typedef struct s_fork
 {
 	t_bool			fork_free;
@@ -115,7 +124,7 @@ int	has_ended(t_data *data)
 	current = data->list;
 	if (data->death)
 	{
-		printf("END BY DEATH\n");
+		//printf("END BY DEATH\n");
 		return (1);
 	}
 	else
@@ -129,21 +138,21 @@ int	has_ended(t_data *data)
 				current = current->next;
 				i ++;
 			}
-			printf("END BY MEALS\n");
+			//printf("END BY MEALS\n");
 			return (1);
 		}
 		return (0);
 	}
 }
 
-void	write_output(t_philo *philo, char *msg, int type) 
+void	write_output(t_philo *philo, char *color, char *msg, int type) 
 {
 	pthread_mutex_lock(&(philo->data->output)->pmutex);
 	philo->data->output->msg = msg;
 	if (type == 1)
-		printf("%ld %d %s %d\n", get_time(), philo->id, philo->data->output->msg, philo->nmeal);
+		printf("%s%s\n", color, philo->data->output->msg);
 	else
-		printf("%ld %d %s", get_time(), philo->id, philo->data->output->msg);
+		printf("%s%ld %d %s", color, get_time(), philo->id, philo->data->output->msg);
 	pthread_mutex_unlock(&(philo->data->output)->pmutex);
 }
 
@@ -151,10 +160,10 @@ void	a_sleep(t_philo *philo)
 {
 	if (!has_ended(philo->data))
 	{
-		write_output(philo, "is sleeping\n", 0);
+		write_output(philo, KMAG, "is sleeping\n", 0);
 		usleep(philo->data->time_to_sleep * 1000);
 		if (!has_ended(philo->data))
-			write_output(philo, "is thinking\n", 0);
+			write_output(philo, KCYN, "is thinking\n", 0);
 	}
 	else
 		return ;
@@ -165,58 +174,54 @@ void	*routine(void *philo)
 	t_philo	*philo_;
 
 	philo_ = (t_philo *)philo;
-	//write_output(philo_, "entered 'routine'\n", 0);
 	philo_->last_meal = get_time();
 	if (philo_->id % 2 == 0)
 		a_sleep(philo_);
 	while (!has_ended(philo_->data))
 	{
-		//write_output(philo_, "has entered loop\n", 0);
 		if (get_time() - philo_->last_meal >= philo_->data->time_to_die)
 		{
 			philo_->data->death = 1;
-			//write_output(philo_, "--- DEATH ---\n", 0);
-			write_output(philo_, "died\n", 0);
+			write_output(philo_, KRED, "died\n", 0);
 			return (philo_);
 		}
 		if (philo_->fork_free == TRUE && philo_->next->fork_free == TRUE)
 		{
-			if (pthread_mutex_lock(&(philo_->fmutex)))			// besoin de vérifier si possible de lock? que faire si peut pas? attendre?
+			if (pthread_mutex_lock(&(philo_->fmutex)))
 			{
-				write_output(philo_, "couldn't lock own fork\n", 0);
+				//write_output(philo_, "couldn't lock own fork\n", 0);
 				usleep(1000);
 			}	
 			philo_->fork_free = FALSE;
-			write_output(philo_, "has locked own fork\n", 0);
-			if (pthread_mutex_lock(&(philo_->next->fmutex))) 	// comment faire attendre et réessayer de lock?
+			write_output(philo_, KGRN, "has locked own fork\n", 0);
+			if (pthread_mutex_lock(&(philo_->next->fmutex)))
 			{
-				write_output(philo_, "couldn't lock next fork\n", 0);
+				//write_output(philo_, "couldn't lock next fork\n", 0);
 				pthread_mutex_unlock(&(philo_->fmutex));
 				philo_->fork_free = TRUE;
-				write_output(philo_, "has unlocked own fork\n", 0);
+				//write_output(philo_, "has unlocked own fork\n", 0);
 				usleep(1000);
 			}
 			else
 			{
 				philo_->next->fork_free = FALSE;
-				write_output(philo_, "has locked next fork\n", 0);
-				write_output(philo_, "is eating\n", 0);
+				write_output(philo_, KGRN, "has locked next fork\n", 0);
+				write_output(philo_, KYEL, "is eating\n", 0);
 				philo_->last_meal = get_time();
 				usleep(philo_->data->time_to_eat * 1000);
 				philo_->nmeal ++;
 				pthread_mutex_unlock(&(philo_->next->fmutex));
 				philo_->next->fork_free = TRUE;
-				write_output(philo_, "has unlocked next fork\n", 0);
+				//write_output(philo_, "has unlocked next fork\n", 0);
 				pthread_mutex_unlock(&(philo_->fmutex));
 				philo_->fork_free = TRUE;
-				write_output(philo_, "has unlocked own fork\n", 0);
+				//write_output(philo_, "has unlocked own fork\n", 0);
 				a_sleep(philo_);
 			}
 		}
 		else
 			usleep(1000);
 	}
-	//write_output(philo_, "exited loop\n", 0);
 	return (philo_);
 }
 
@@ -264,6 +269,7 @@ int	main(int argc, char **argv)
 	thread = (pthread_t **)malloc((data.nphilo + 1) * sizeof(pthread_t *));
 	if (!thread)
 		return 1;
+	write_output(data.list, KNRM, "\n========================\n- START OF SIMULATION -\n========================\n", 1);
 	i = 0;
 	while (i < data.nphilo)
 	{
@@ -289,5 +295,6 @@ int	main(int argc, char **argv)
 	}
 	pthread_mutex_destroy(&(data.target)->mutex);
 	pthread_mutex_destroy(&(data.output)->pmutex);
+	write_output(data.list, KNRM, "\n==========================\n--- END OF SIMULATION ---\n==========================\n", 1);
 	return (0);
 }
