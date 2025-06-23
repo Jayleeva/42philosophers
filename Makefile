@@ -2,7 +2,7 @@ NAME = philosophers
 
 SRC_DIR = ./src
 SRC =	main.c \
-		ft_atoi.c \
+		utils.c \
 		simulation.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))

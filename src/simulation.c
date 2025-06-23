@@ -1,39 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   simulation.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
+/*   Updated: 2025/06/23 15:37:01 by cyglardo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/philosophers.h"
-
-int	has_ended(t_data *data)
-{
-	t_philo	*current;
-	int		i;
-
-	current = data->list;
-	if (data->death)
-		return (1);
-	else
-	{
-		if (data->minmeals > -1)
-		{
-			i = 0;
-			while (i < data->nphilo)
-			{
-				if (current->nmeal < data->minmeals)
-					return (0);
-				current = current->next;
-				i ++;
-			}
-			return (1);
-		}
-		return (0);
-	}
-}
 
 void	a_sleep(t_philo *philo)
 {
 	if (!has_ended(philo->data))
 	{
-		write_output(philo, KMAG, "is sleeping\n", 0);
+		print_output(philo, KMAG, "is sleeping\n", 0);
 		usleep(philo->data->time_to_sleep * 1000);
 		if (!has_ended(philo->data))
-			write_output(philo, KCYN, "is thinking\n", 0);
+			print_output(philo, KCYN, "is thinking\n", 0);
 	}
 	else
 		return ;
@@ -44,7 +30,7 @@ void	try_eating(t_philo *philo_)
 	if (pthread_mutex_lock(&(philo_->fmutex)))
 		usleep(1000);
 	philo_->fork_free = FALSE;
-	write_output(philo_, KGRN, "has locked own fork\n", 0);
+	print_output(philo_, KGRN, "has locked own fork\n", 0);
 	if (pthread_mutex_lock(&(philo_->next->fmutex)))
 	{
 		pthread_mutex_unlock(&(philo_->fmutex));
@@ -54,8 +40,8 @@ void	try_eating(t_philo *philo_)
 	else
 	{
 		philo_->next->fork_free = FALSE;
-		write_output(philo_, KGRN, "has locked next fork\n", 0);
-		write_output(philo_, KYEL, "is eating\n", 0);
+		print_output(philo_, KGRN, "has locked next fork\n", 0);
+		print_output(philo_, KYEL, "is eating\n", 0);
 		philo_->last_meal = get_time();
 		usleep(philo_->data->time_to_eat * 1000);
 		philo_->nmeal ++;
@@ -80,7 +66,7 @@ void	*routine(void *philo)
 		if (get_time() - philo_->last_meal >= philo_->data->time_to_die)
 		{
 			philo_->data->death = 1;
-			write_output(philo_, KRED, "died\n", 0);
+			print_output(philo_, KRED, "died\n", 0);
 			return (philo_);
 		}
 		if (philo_->fork_free == TRUE && philo_->next->fork_free == TRUE)

@@ -1,5 +1,17 @@
-#ifndef TEST_PHILO_H
-# define TEST_PHILO_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
+/*   Updated: 2025/06/23 15:36:02 by cyglardo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PHILOSOPHERS_H
+# define PHILOSOPHERS_H
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -58,7 +70,7 @@ void	end_simulation(t_data *data, pthread_t **thread);
 
 //utils
 time_t	get_time(void);
-void	write_output(t_philo *philo, char *color, char *msg, int type);
+void	print_output(t_philo *philo, char *color, char *msg, int type);
 void	free_all(t_data *data, pthread_t **thread);
 
 #endif

@@ -1,40 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
+/*   Updated: 2025/06/23 15:35:27 by cyglardo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/philosophers.h"
-
-void	free_all(t_data *data, pthread_t **thread)
-{
-	int		i;
-	t_philo	*current;
-
-	free(thread);
-	i = 0;
-	current = data->list;
-	while (i < data->nphilo)
-	{
-		free(current);
-		current = current->next;
-		i ++;
-	}
-}
-
-void	write_output(t_philo *philo, char *color, char *msg, int type)
-{
-	pthread_mutex_lock(&(philo->data)->pmutex);
-	philo->data->msg = msg;
-	if (type == 1)
-		printf("%s%s\n", color, philo->data->msg);
-	else
-		printf("%s%ld %d %s", color, get_time(), philo->id, philo->data->msg);
-	pthread_mutex_unlock(&(philo->data)->pmutex);
-}
-
-time_t	get_time(void)
-{
-	struct timeval	time;
-
-	if (gettimeofday(&time, NULL) == -1)
-		write(2, "gettimeofday() error\n", 22);
-	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
-}
 
 int	init_data(int argc, char **argv, t_data *data)
 {
@@ -107,7 +83,6 @@ t_philo	*create_list(int nphilo)
 	current->next->next = head;
 	return (head);
 }
-
 
 int	main(int argc, char **argv)
 {
