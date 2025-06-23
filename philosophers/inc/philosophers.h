@@ -92,3 +92,5 @@ t_philo	*create_list(t_data *data);
 int	    init_mutex(t_philo *list);
 
 #endif
+
+///upside_down days:1
