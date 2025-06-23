@@ -1,24 +1,15 @@
-#ifndef PHILOSOPHERS_H
-# define PHILOSOPHERS_h
-# include <stdio.h>
+#ifndef TEST_PHILO_H
+# define TEST_PHILO_H
 # include <unistd.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <sys/time.h>
 # include <pthread.h>
+# include <sys/time.h>
 
 typedef unsigned char	t_bool;
 # define TRUE 1
 # define FALSE 0
-
-# define THINK "is thinking"
-# define EAT "is eating"
-# define SLEEP "is sleeping"
-# define DEAD "is dead"
-# define FINISH "has finished all her meals"
-
-# define START "===========================\n--- START OF SIMULATION ---\n==========================="
-# define END "===========================\n---- END OF SIMULATION ----\n==========================="
 
 # define KNRM  "\x1B[0m"
 # define KRED  "\x1B[31m"
@@ -29,33 +20,16 @@ typedef unsigned char	t_bool;
 # define KCYN  "\x1B[36m"
 # define KWHT  "\x1B[37m"
 
-/*typedef	struct s_fork
-{
-	t_bool			fork_free;
-	pthread_mutex_t	forkm;
-}					t_fork;*/
-
-
 typedef struct s_philo
 {
-	int				ID;
-	char			action;
+	int				id;
 	t_bool			fork_free;
-	//struct s_fork	fork;
-	time_t			last_meal;
-	//pthread_mutex_t	last_mealm;
+	pthread_mutex_t	fmutex;
 	int				nmeal;
-	t_bool			dead;
+	time_t			last_meal;
 	struct s_philo	*next;
+	struct s_data	*data;
 }					t_philo;
-
-typedef struct s_mutex
-{
-	pthread_mutex_t	last_mealm;
-	pthread_mutex_t	forkm;
-	pthread_mutex_t	deadm;
-	pthread_mutex_t	printm;
-}					t_mutex;
 
 typedef struct s_data
 {
@@ -63,32 +37,28 @@ typedef struct s_data
 	time_t			time_to_die;
 	time_t			time_to_eat;
 	time_t			time_to_sleep;
-	int				meals_min;
-	t_bool			dead;
+	int				death;
 	t_philo			*list;
-	t_mutex			mutex;
+	int				minmeals;
+	pthread_mutex_t	mmutex;
+	char			*msg;
+	pthread_mutex_t	pmutex;
 }					t_data;
 
-//launch
-void	start_simulation(t_data *data);
-void	*routine(void *data);
+//init
+int		ft_atoi(const char *str);
 
-//exit
-t_bool	has_simulation_ended(t_data *data);
-void	end_simulation(t_data *data, pthread_t **thread, int nphilo);
-
-//actions
-t_bool	is_dead(t_data *data);
-int		a_think(t_data *data);
-int		a_eat(t_data *data);
-int		a_sleep(t_data *data);
-
-//output
-void    write_output(t_mutex *mutex, char *color, int philo, char *action);
+//simulation
+int		has_ended(t_data *data);
+void	a_sleep(t_philo *philo);
+void	try_eating(t_philo *philo_);
+void	*routine(void *philo);
+int		start_simulation(t_data *data, pthread_t **thread, t_philo *list);
+void	end_simulation(t_data *data, pthread_t **thread);
 
 //utils
-size_t	get_time(void);
-int		ft_atoi(const char *str);
-void	free_list(t_philo *head);
+time_t	get_time(void);
+void	write_output(t_philo *philo, char *color, char *msg, int type);
+void	free_all(t_data *data, pthread_t **thread);
 
 #endif

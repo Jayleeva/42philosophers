@@ -1,27 +1,24 @@
 NAME = philosophers
 
 SRC_DIR = ./src
-SRC = 	main.c \
+SRC =	main.c \
 		ft_atoi.c \
 		simulation.c \
-		actions.c \
-		output.c \
-		free_list.c \
-		
-OBJ = $(SRC:.c=.o)
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
+
+OBJ := $(SRC:.c=.o)
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ./inc
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT_LIB)
-	@${CC} ${CFLAGS} ${OBJ} $(LIBFT_LIB) -o $(NAME)
+$(NAME): $(OBJ)
+	@${CC} ${CFLAGS} -o $(NAME) $(OBJ)
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) -r
 fclean: clean
 	rm -f $(NAME)
 re: fclean all
