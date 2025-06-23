@@ -1,11 +1,11 @@
 #ifndef TEST_PHILO_H
 # define TEST_PHILO_H
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/time.h>
-# include <pthread.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
+#include <sys/time.h>
 
 typedef unsigned char	t_bool;
 # define TRUE 1
@@ -31,18 +31,6 @@ typedef struct s_philo
 	struct s_data	*data;
 }					t_philo;
 
-typedef struct s_target
-{
-	int				minmeal;
-	pthread_mutex_t	mutex;
-}					t_target;
-
-typedef struct s_output
-{
-	char			*msg;
-	pthread_mutex_t	pmutex;
-}					t_output;
-
 typedef struct s_data
 {
 	int				nphilo;
@@ -53,8 +41,10 @@ typedef struct s_data
 	int				death;
 	char			*txt;
 	t_philo			*list;
-	t_target		*target;
-	t_output		*output;
+	int				minmeals;
+	pthread_mutex_t	mmutex;
+	char			*msg;
+	pthread_mutex_t	pmutex;
 }					t_data;
 
 #endif
