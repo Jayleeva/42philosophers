@@ -188,11 +188,8 @@ void	end_simulation(t_data *data, pthread_t **thread)
 	current = data->list;
 	while (i < data->nphilo)
 	{	
-		if (thread[i])
-		{
-			write(1, "-C-\n", 4);
-			pthread_join(*thread[i], NULL);
-		}
+		printf("-C-\n");
+		pthread_join(*thread[i], NULL);
 		pthread_mutex_destroy(&(current->fmutex));
 		current = current->next;
 		i ++;
