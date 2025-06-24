@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/23 15:37:01 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:14:15 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,29 +27,24 @@ void	a_sleep(t_philo *philo)
 
 void	try_eating(t_philo *philo_)
 {
-	if (pthread_mutex_lock(&(philo_->fmutex)))
-		usleep(1000);
-	philo_->fork_free = FALSE;
-	print_output(philo_, KGRN, "has locked own fork\n", 0);
-	if (pthread_mutex_lock(&(philo_->next->fmutex)))
+	if (!pthread_mutex_lock(&(philo_->fmutex)))
 	{
-		pthread_mutex_unlock(&(philo_->fmutex));
-		philo_->fork_free = TRUE;
-		usleep(1000);
-	}
-	else
-	{
-		philo_->next->fork_free = FALSE;
-		print_output(philo_, KGRN, "has locked next fork\n", 0);
-		print_output(philo_, KYEL, "is eating\n", 0);
-		philo_->last_meal = get_time();
-		usleep(philo_->data->time_to_eat * 1000);
-		philo_->nmeal ++;
-		pthread_mutex_unlock(&(philo_->next->fmutex));
-		philo_->next->fork_free = TRUE;
-		pthread_mutex_unlock(&(philo_->fmutex));
-		philo_->fork_free = TRUE;
-		a_sleep(philo_);
+		philo_->fork_free = FALSE;
+		print_output(philo_, KGRN, "has locked own fork\n", 0);
+		if (!pthread_mutex_lock(&(philo_->next->fmutex)))
+		{
+			philo_->next->fork_free = FALSE;
+			print_output(philo_, KGRN, "has locked next fork\n", 0);
+			print_output(philo_, KYEL, "is eating\n", 0);
+			philo_->last_meal = get_time();
+			usleep(philo_->data->time_to_eat * 1000);
+			philo_->nmeal ++;
+			pthread_mutex_unlock(&(philo_->next->fmutex));
+			philo_->next->fork_free = TRUE;
+			pthread_mutex_unlock(&(philo_->fmutex));
+			philo_->fork_free = TRUE;
+			a_sleep(philo_);
+		}
 	}
 }
 
@@ -58,6 +53,8 @@ void	*routine(void *philo)
 	t_philo	*philo_;
 
 	philo_ = (t_philo *)philo;
+	if (philo_->data->nphilo == 1)
+		philo_->next->fork_free = FALSE;
 	philo_->last_meal = get_time();
 	if (philo_->id % 2 == 0)
 		a_sleep(philo_);
@@ -71,8 +68,6 @@ void	*routine(void *philo)
 		}
 		if (philo_->fork_free == TRUE && philo_->next->fork_free == TRUE)
 			try_eating(philo_);
-		else
-			usleep(1000);
 	}
 	return (philo_);
 }
