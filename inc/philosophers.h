@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/23 15:36:02 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:58:01 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,8 @@ typedef unsigned char	t_bool;
 # define KRED  "\x1B[31m"
 # define KGRN  "\x1B[32m"
 # define KYEL  "\x1B[33m"
-# define KBLU  "\x1B[34m"
 # define KMAG  "\x1B[35m"
 # define KCYN  "\x1B[36m"
-# define KWHT  "\x1B[37m"
 
 typedef struct s_philo
 {

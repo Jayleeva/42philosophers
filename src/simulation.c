@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/24 15:14:15 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:20:33 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	try_eating(t_philo *philo_)
 			a_sleep(philo_);
 		}
 	}
+	else
+		print_output(philo_, KCYN, "is thinking\n", 0);
 }
 
 void	*routine(void *philo)
