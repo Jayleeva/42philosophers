@@ -12,6 +12,7 @@
 
 #include "../inc/philosophers.h"
 
+//Impression de la bannière marquant le début et la fin de la simulation
 void	print_banner(char c)
 {
 	if (c == 'S')
@@ -57,14 +58,30 @@ void	*routine(void *philo)
 	return (philo_);
 }
 
+
+void	*monitoring(void *monitor)
+{
+	t_monitor *monitor_;
+
+	monitor_ = (t_monitor *)monitor;
+	
+	return (monitor_);
+}
 //Lancement de la simulation: 
 //allocation mémoire puis création de chaque thread;
 //on avance dans les deux listes tout en les liant ensemble
 int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 {
-	int	i;
+	t_monitor	*monitor;
+	pthread_t	*mthread;
 
+	int	i;
 	print_banner('S');
+	mthread = malloc(sizeof(pthread_t *));
+	if (!mthread)
+		return (1);
+	if (pthread_create(mthread, NULL, monitoring, monitor))
+		return (1);
 	i = 0;
 	while (i < data->nphilo)
 	{

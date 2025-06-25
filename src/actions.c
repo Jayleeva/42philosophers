@@ -46,8 +46,8 @@ void	try_eating(t_philo *philo_)
 			go_sleep(philo_);
 		}
 	}
-	else
-		print_output(philo_, KCYN, "is thinking\n", 0);
+	//else
+	//	print_output(philo_, KCYN, "is thinking\n", 0);
 }
 
 //La variable death de la structure principale est lock pour être mise à 1

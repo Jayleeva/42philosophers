@@ -57,7 +57,7 @@ int	is_minmeals_done(t_data *data)
 	return (0);
 }
 
-//Verification : une condition de fin a-t-elle été atteinte?
+//Vérification : une condition de fin a-t-elle été atteinte?
 int	has_ended(t_data *data)
 {
 	if (has_someone_died(data))

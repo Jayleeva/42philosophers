@@ -20,6 +20,9 @@ Aussi, la liste chaînée doit être circulaire: le dernier chaînon doit pointe
 
 Enfin, l'ordre des actions est le suivant: manger, dormir, penser (répéter). Seulement, pour mieux répartir les threads, on en fait commencer un sur deux par dormir; de plus, l'action de penser consiste en réalité en un simple print (ou ajouter un usleep()?): il faut la voir comme une action tampon le temps que les fourchettes se libèrent et qu'on puisse manger. Ainsi, vous pourriez décider de les faire commencer par penser, cela respecterait également le sujet, du moment que vous n'écrivez *is thinking* qu'une fois par action de penser.
 
+# Conseils
+Pour être moins submergé-e, commencez peut-être par un programme plus simple, par ex.: 3 threads, le premier qui complète la modification d'une var à laquelle ils ont tous accès (par ex.: changer une string "hello" en "goodbye", incrémenter un int de 1 jusqu'à arriver à 10, ...), met fin au programme. Une fois que vous êtes sûr-e que ça marche, rajoutez une couche, par ex.: le nombre de threads à créer est passé en argument, chaque thread a un temps limité pour réussir, etc. Et rapprochez-vous petit à petit du vrai programme.
+
 # Threads
 En utilisant des threads, on peut "diviser le travail" dans un même programme pour qu'il s'exécute plus rapidement.
 ## Création d'un thread

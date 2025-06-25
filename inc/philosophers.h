@@ -30,6 +30,11 @@ typedef unsigned char	t_bool;
 # define KMAG  "\x1B[35m"
 # define KCYN  "\x1B[36m"
 
+typedef struct s_monitor
+{
+	struct s_data	*data;
+}					t_monitor;
+
 typedef struct s_philo
 {
 	int				id;
