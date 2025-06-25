@@ -86,3 +86,10 @@ L'argument doit doit être un pointeur sur pthread_mutex_t.
 pthread_mutex_destroy(&your_mutex);
 ```
 L'argument doit doit être un pointeur sur pthread_mutex_t.
+
+# Race condition ou data race
+Quand (?), il y a ce qu'on appelle des "data race", ou "race conditions". 
+
+Pour vérifier si vous en avez, utilisez l'outil DRD ou helgrind de Valgrind. Helgrind est plus facile à lire.
+
+Pour utiliser un outil valgrind, on ajoute le flag ``--tool=`` et l'outil en question: ``valgrind --tool=drd`` ou ``valgrind --tool=helgrind``. 
