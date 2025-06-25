@@ -12,7 +12,7 @@
 
 #include "../inc/philosophers.h"
 
-//Transformation d'une chaine de char ascii en int
+//Transformation d'une chaîne de char ascii en int
 int	ft_atoi(const char *str)
 {
 	int	i;
@@ -41,19 +41,21 @@ int	ft_atoi(const char *str)
 	return (result * n);
 }
 
-//Liberation de toute la memoire allouee
+//Libération de toute la mémoire allouée
 void	free_all(t_data *data, pthread_t **thread)
 {
 	int		i;
 	t_philo	*current;
+	t_philo	*temp;
 
 	free(thread);
 	i = 0;
 	current = data->list;
 	while (i < data->nphilo)
 	{
-		free(current);
+		temp = current;
 		current = current->next;
+		free(temp);
 		i ++;
 	}
 }
@@ -78,31 +80,4 @@ time_t	get_time(void)
 	if (gettimeofday(&time, NULL) == -1)
 		write(2, "gettimeofday() error\n", 22);
 	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
-}
-
-//Verification : une condition de fin a-t-elle ete atteinte?
-int	has_ended(t_data *data)
-{
-	t_philo	*current;
-	int		i;
-
-	current = data->list;
-	if (data->death)
-		return (1);
-	else
-	{
-		if (data->minmeals > -1)
-		{
-			i = 0;
-			while (i < data->nphilo)
-			{
-				if (current->nmeal < data->minmeals)
-					return (0);
-				current = current->next;
-				i ++;
-			}
-			return (1);
-		}
-		return (0);
-	}
 }

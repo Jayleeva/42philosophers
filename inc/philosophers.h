@@ -48,6 +48,7 @@ typedef struct s_data
 	time_t			time_to_eat;
 	time_t			time_to_sleep;
 	int				death;
+	pthread_mutex_t	dmutex;
 	t_philo			*list;
 	int				minmeals;
 	pthread_mutex_t	mmutex;
@@ -55,16 +56,28 @@ typedef struct s_data
 	pthread_mutex_t	pmutex;
 }					t_data;
 
-//init
+//parsing and init
 int		ft_atoi(const char *str);
+t_philo	*create_list(int nphilo);
+t_philo	*create_list_utils(t_philo *head, t_philo *current, int nphilo);
+void	init_philo(t_philo *current);
+int		init_mutex(t_data *data);
+int		init_data(int argc, char **argv, t_data *data);
 
 //simulation
-int		has_ended(t_data *data);
-void	a_sleep(t_philo *philo);
-void	try_eating(t_philo *philo_);
 void	*routine(void *philo);
 int		start_simulation(t_data *data, pthread_t **thread, t_philo *list);
 void	end_simulation(t_data *data, pthread_t **thread);
+
+//actions 
+void	go_sleep(t_philo *philo);
+void	try_eating(t_philo *philo_);
+void	death(t_philo *philo);
+
+//ending conditions
+int		has_ended(t_data *data);
+int		has_someone_died(t_data *data);
+int		is_minmeals_done(t_data *data);
 
 //utils
 time_t	get_time(void);
