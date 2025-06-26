@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:41:22 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:44:15 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef struct s_philo
 
 typedef struct s_data
 {
+	struct timeval		stime;
+	time_t				time;
 	int					nphilo;
 	time_t				time_to_die;
 	time_t				time_to_eat;
@@ -86,8 +88,9 @@ int		is_minmeals_done(t_data *data);
 
 //utils
 int		must_stop(t_philo *philo);
-time_t	get_time(void);
-void	print_output(t_philo *philo, char *color, char *msg, int type);
+time_t	get_init_time(void);
+time_t	get_time(t_data *data);
+void	print_output(t_philo *philo, char *color, char *msg);
 void	free_all(t_data *data, pthread_t **thread);
 
 #endif

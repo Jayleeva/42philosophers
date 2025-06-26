@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 17:15:23 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:50:33 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,47 +41,34 @@ int	ft_atoi(const char *str)
 	return (result * n);
 }
 
-//Libération de toute la mémoire allouée
-void	free_all(t_data *data, pthread_t **thread)
-{
-	int		i;
-	t_philo	*current;
-	t_philo	*temp;
-
-	free(thread);
-	i = 0;
-	current = data->list;
-	while (i < data->nphilo)
-	{
-		temp = current;
-		current = current->next;
-		free(temp);
-		i ++;
-	}
-}
-
 //Impression des outputs
-void	print_output(t_philo *philo, char *color, char *msg, int type)
+void	print_output(t_philo *p, char *color, char *msg)
 {
-	//if (must_stop(philo)) // if 1, adapt, if end by meals, adapt
-	//	return ;
-	pthread_mutex_lock(&(philo->data)->pmutex);
-	philo->data->msg = msg;
-	if (type == 1)
-		printf("%s%s\n", color, philo->data->msg);
-	else
-		printf("%s%ld %d %s", color, get_time(), philo->id, philo->data->msg);
-	pthread_mutex_unlock(&(philo->data)->pmutex);
+	pthread_mutex_lock(&(p->data)->pmutex);
+	p->data->msg = msg;
+	printf("%s%ld %d %s", color, get_time(p->data), p->id, p->data->msg);
+	pthread_mutex_unlock(&(p->data)->pmutex);
 }
 
-//Calcul du temps actuel
-time_t	get_time(void)
+//Obtenir le temps au moment du lancement
+//de la simulation pour un timestamp plus lisible
+time_t	get_init_time(void)
 {
 	struct timeval	time;
 
 	if (gettimeofday(&time, NULL) == -1)
 		write(2, "gettimeofday() error\n", 22);
-	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000); //adapt timestamp from 0
+	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
+}
+
+//Calcul du temps actuel
+time_t	get_time(t_data *data)
+{
+	struct timeval	time;
+
+	if (gettimeofday(&time, NULL) == -1)
+		write(2, "gettimeofday() error\n", 22);
+	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000 - data->time);
 }
 
 //Verification : le philosophe doit-il s'arreter?

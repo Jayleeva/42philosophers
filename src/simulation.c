@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:42:18 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:38:37 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	*routine(void *philo)
 		one_philo(philo);
 		return (philo_);
 	}
-	philo_->last_meal = get_time();
+	philo_->last_meal = get_time(philo_->data);
 	if (philo_->id % 2 == 0)
 		go_sleep(philo_);
 	while (!must_stop(philo_))
@@ -73,6 +73,7 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 	int	i;
 
 	print_banner('S');
+	data->time = get_init_time();
 	i = 0;
 	while (i < data->nphilo)
 	{
