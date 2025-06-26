@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:17:58 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:33:36 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,7 @@ int	is_minmeals_done(t_data *data)
 //Vérification : une condition de fin a-t-elle été atteinte?
 int	has_ended(t_data *data)
 {
-	if (has_someone_died(data))
-		return (1);
-	else if (is_minmeals_done(data))
+	if (has_someone_died(data) || is_minmeals_done(data))
 		return (1);
 	else
 		return (0);

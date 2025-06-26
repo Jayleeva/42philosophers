@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:16:30 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:41:22 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	*monitoring(void *monitor);
 
 //actions
 void	go_sleep(t_philo *philo);
-void	try_eating(t_philo *philo_);
+int		try_eating(t_philo *philo_);
 void	death(t_philo *philo);
 
 //ending conditions

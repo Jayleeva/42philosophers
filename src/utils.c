@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:18:08 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:15:23 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	free_all(t_data *data, pthread_t **thread)
 //Impression des outputs
 void	print_output(t_philo *philo, char *color, char *msg, int type)
 {
+	//if (must_stop(philo)) // if 1, adapt, if end by meals, adapt
+	//	return ;
 	pthread_mutex_lock(&(philo->data)->pmutex);
 	philo->data->msg = msg;
 	if (type == 1)
@@ -79,7 +81,7 @@ time_t	get_time(void)
 
 	if (gettimeofday(&time, NULL) == -1)
 		write(2, "gettimeofday() error\n", 22);
-	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
+	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000); //adapt timestamp from 0
 }
 
 //Verification : le philosophe doit-il s'arreter?

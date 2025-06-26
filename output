@@ -1,0 +1,188 @@
+[0m
+========================
+- START OF SIMULATION -
+========================
+[32m1750949131308 1 has locked own fork
+[32m1750949131308 1 has locked next fork
+[33m1750949131308 1 is eating
+[35m1750949131308 2 is sleeping
+[32m1750949131308 3 has locked own fork
+[32m1750949131308 3 has locked next fork
+[33m1750949131308 3 is eating
+[35m1750949131308 4 is sleeping
+[32m1750949131308 5 has locked own fork
+[36m1750949131508 2 is thinking
+[35m1750949131508 3 is sleeping
+[35m1750949131508 1 is sleeping
+[32m1750949131508 2 has locked own fork
+[32m1750949131508 2 has locked next fork
+[33m1750949131508 2 is eating
+[36m1750949131508 4 is thinking
+[32m1750949131508 4 has locked own fork
+[32m1750949131508 5 has locked next fork
+[33m1750949131508 5 is eating
+[36m1750949131708 3 is thinking
+[35m1750949131708 2 is sleeping
+[32m1750949131708 3 has locked own fork
+[36m1750949131708 1 is thinking
+[35m1750949131708 5 is sleeping
+[32m1750949131708 4 has locked next fork
+[33m1750949131708 4 is eating
+[32m1750949131708 1 has locked own fork
+[32m1750949131708 1 has locked next fork
+[33m1750949131708 1 is eating
+[36m1750949131908 2 is thinking
+[35m1750949131908 4 is sleeping
+[32m1750949131908 3 has locked next fork
+[33m1750949131908 3 is eating
+[36m1750949131908 5 is thinking
+[32m1750949131908 5 has locked own fork
+[35m1750949131908 1 is sleeping
+[32m1750949131908 2 has locked own fork
+[32m1750949131908 5 has locked next fork
+[33m1750949131908 5 is eating
+[36m1750949132108 4 is thinking
+[32m1750949132108 4 has locked own fork
+[35m1750949132108 3 is sleeping
+[32m1750949132108 2 has locked next fork
+[33m1750949132108 2 is eating
+[36m1750949132108 1 is thinking
+[35m1750949132108 5 is sleeping
+[32m1750949132108 4 has locked next fork
+[33m1750949132108 4 is eating
+[32m1750949132108 1 has locked own fork
+[36m1750949132308 3 is thinking
+[35m1750949132308 2 is sleeping
+[32m1750949132308 1 has locked next fork
+[33m1750949132308 1 is eating
+[32m1750949132308 3 has locked own fork
+[36m1750949132308 5 is thinking
+[32m1750949132308 5 has locked own fork
+[35m1750949132308 4 is sleeping
+[32m1750949132308 3 has locked next fork
+[33m1750949132308 3 is eating
+[36m1750949132508 4 is thinking
+[35m1750949132508 3 is sleeping
+[32m1750949132508 4 has locked own fork
+[36m1750949132508 2 is thinking
+[32m1750949132508 2 has locked own fork
+[32m1750949132508 2 has locked next fork
+[33m1750949132508 2 is eating
+[32m1750949132508 5 has locked next fork
+[35m1750949132508 1 is sleeping
+[33m1750949132508 5 is eating
+[36m1750949132708 3 is thinking
+[35m1750949132708 5 is sleeping
+[36m1750949132708 1 is thinking
+[35m1750949132708 2 is sleeping
+[32m1750949132708 4 has locked next fork
+[33m1750949132708 4 is eating
+[32m1750949132708 3 has locked own fork
+[32m1750949132708 1 has locked own fork
+[32m1750949132708 1 has locked next fork
+[33m1750949132708 1 is eating
+[36m1750949132908 2 is thinking
+[32m1750949132908 2 has locked own fork
+[35m1750949132908 1 is sleeping
+[32m1750949132908 3 has locked next fork
+[33m1750949132908 3 is eating
+[36m1750949132909 5 is thinking
+[32m1750949132909 5 has locked own fork
+[35m1750949132909 4 is sleeping
+[32m1750949132909 5 has locked next fork
+[33m1750949132909 5 is eating
+[36m1750949133109 1 is thinking
+[35m1750949133109 5 is sleeping
+[35m1750949133109 3 is sleeping
+[36m1750949133109 4 is thinking
+[32m1750949133109 4 has locked own fork
+[32m1750949133109 4 has locked next fork
+[33m1750949133109 4 is eating
+[32m1750949133109 1 has locked own fork
+[32m1750949133109 2 has locked next fork
+[33m1750949133109 2 is eating
+[36m1750949133309 3 is thinking
+[35m1750949133309 4 is sleeping
+[36m1750949133309 5 is thinking
+[32m1750949133309 5 has locked own fork
+[35m1750949133309 2 is sleeping
+[32m1750949133309 1 has locked next fork
+[33m1750949133309 1 is eating
+[32m1750949133309 3 has locked own fork
+[32m1750949133309 3 has locked next fork
+[33m1750949133309 3 is eating
+[36m1750949133509 4 is thinking
+[36m1750949133509 2 is thinking
+[32m1750949133509 2 has locked own fork
+[32m1750949133509 2 has locked next fork
+[33m1750949133509 2 is eating
+[32m1750949133509 5 has locked next fork
+[33m1750949133509 5 is eating
+[35m1750949133509 1 is sleeping
+[35m1750949133509 3 is sleeping
+[32m1750949133509 4 has locked own fork
+[35m1750949133709 2 is sleeping
+[35m1750949133709 5 is sleeping
+[32m1750949133709 4 has locked next fork
+[33m1750949133709 4 is eating
+[36m1750949133709 1 is thinking
+[32m1750949133709 1 has locked own fork
+[32m1750949133709 1 has locked next fork
+[33m1750949133709 1 is eating
+[36m1750949133709 3 is thinking
+[32m1750949133709 3 has locked own fork
+[36m1750949133909 2 is thinking
+[35m1750949133909 4 is sleeping
+[32m1750949133909 3 has locked next fork
+[33m1750949133909 3 is eating
+[36m1750949133909 5 is thinking
+[32m1750949133909 5 has locked own fork
+[35m1750949133909 1 is sleeping
+[32m1750949133909 2 has locked own fork
+[32m1750949133909 5 has locked next fork
+[33m1750949133909 5 is eating
+[35m1750949134109 3 is sleeping
+[32m1750949134109 2 has locked next fork
+[33m1750949134109 2 is eating
+[36m1750949134109 4 is thinking
+[32m1750949134109 4 has locked own fork
+[36m1750949134109 1 is thinking
+[35m1750949134109 5 is sleeping
+[32m1750949134109 1 has locked own fork
+[32m1750949134109 4 has locked next fork
+[33m1750949134109 4 is eating
+[36m1750949134309 3 is thinking
+[32m1750949134309 3 has locked own fork
+[35m1750949134309 2 is sleeping
+[32m1750949134309 1 has locked next fork
+[33m1750949134309 1 is eating
+[36m1750949134309 5 is thinking
+[35m1750949134309 4 is sleeping
+[32m1750949134309 5 has locked own fork
+[32m1750949134309 3 has locked next fork
+[33m1750949134309 3 is eating
+[36m1750949134509 2 is thinking
+[35m1750949134509 1 is sleeping
+[32m1750949134509 2 has locked own fork
+[32m1750949134509 5 has locked next fork
+[33m1750949134509 5 is eating
+[36m1750949134509 4 is thinking
+[35m1750949134509 3 is sleeping
+[32m1750949134509 4 has locked own fork
+[32m1750949134509 2 has locked next fork
+[33m1750949134509 2 is eating
+[36m1750949134709 1 is thinking
+[35m1750949134709 5 is sleeping
+[32m1750949134709 4 has locked next fork
+[33m1750949134709 4 is eating
+[32m1750949134709 1 has locked own fork
+[36m1750949134709 3 is thinking
+[35m1750949134709 2 is sleeping
+[32m1750949134709 3 has locked own fork
+[32m1750949134709 1 has locked next fork
+[33m1750949134709 1 is eating
+[36m1750949134909 5 is thinking
+[0m
+==========================
+--- END OF SIMULATION ---
+==========================

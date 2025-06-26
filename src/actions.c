@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:23:48 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:51:32 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,17 @@ void	go_sleep(t_philo *philo)
 // s'il réussit, il mange pendant le time_to_eat puis va dormir,
 // sinon, il réfléchit
 
-//if (get_time() - tmp + philo->data->time_to_eat >= philo->data->time_to_die)
-//	return ;
-void	try_eating(t_philo *philo)
+int	try_eating(t_philo *philo)
 {
 	if (!pthread_mutex_lock(&(philo->fmutex)))
 	{
+		if (must_stop(philo))
+			return (1);
 		print_output(philo, KGRN, "has locked own fork\n", 0);
 		if (!pthread_mutex_lock(&(philo->next->fmutex)))
 		{
+			if (must_stop(philo))
+				return (2);
 			print_output(philo, KGRN, "has locked next fork\n", 0);
 			print_output(philo, KYEL, "is eating\n", 0);
 			philo->last_meal = get_time();
@@ -49,6 +51,7 @@ void	try_eating(t_philo *philo)
 	}
 	else
 		print_output(philo, KCYN, "is thinking\n", 0);
+	return (0);
 }
 
 //La variable death de la structure principale est lock pour être mise à 1
