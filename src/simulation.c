@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 15:59:04 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:18:48 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	one_philo(t_philo *philo)
 
 //Le thread (ou philo) prend le temps actuel comme temps du dernier repas; 
 // s'il est pair, il commence par dormir;
-// a l'infini (tant qu'une condition de fin n'est pas atteinte),
-// il essaye de manger. 
+// tant qu'une condition de fin a ete atteinte,
+// il essaye de manger.
 void	*routine(void *philo)
 {
 	t_philo	*philo_;
@@ -53,17 +53,8 @@ void	*routine(void *philo)
 	philo_->last_meal = get_time();
 	if (philo_->id % 2 == 0)
 		go_sleep(philo_);
-	while (1)
+	while (!must_stop(philo_))
 	{	
-		if (!pthread_mutex_lock(&(philo_->data->smutex)))
-		{
-			if (philo_->data->stop)
-			{
-				pthread_mutex_unlock(&(philo_->data->smutex));
-				break ;
-			}
-			pthread_mutex_unlock(&(philo_->data->smutex));
-		}
 		try_eating(philo_);
 	}
 	return (philo_);

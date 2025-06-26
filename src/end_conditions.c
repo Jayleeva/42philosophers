@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 15:49:27 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:17:58 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,22 +72,4 @@ int	has_ended(t_data *data)
 		return (1);
 	else
 		return (0);
-}
-
-//Verification : tous les threads ont-ils ete lances?
-int	has_started(t_data *data)
-{
-	int		i;
-	t_philo	*current;
-
-	current = data->list;
-	i = 0;
-	while (i < data->nphilo)
-	{
-		if (current->last_meal == 0)
-			return (0);
-		current = current->next;
-		i ++;
-	}
-	return (1);
 }

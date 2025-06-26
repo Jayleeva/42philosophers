@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/23 15:37:46 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:18:08 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,19 @@ time_t	get_time(void)
 	if (gettimeofday(&time, NULL) == -1)
 		write(2, "gettimeofday() error\n", 22);
 	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
+}
+
+//Verification : le philosophe doit-il s'arreter?
+int	must_stop(t_philo *philo)
+{
+	if (!pthread_mutex_lock(&(philo->data->smutex)))
+	{
+		if (philo->data->stop)
+		{
+			pthread_mutex_unlock(&(philo->data->smutex));
+			return (1);
+		}
+		pthread_mutex_unlock(&(philo->data->smutex));
+	}
+	return (0);
 }

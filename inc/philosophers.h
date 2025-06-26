@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 15:44:06 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:16:30 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,21 +70,22 @@ int		start_simulation(t_data *data, pthread_t **thread, t_philo *list);
 void	end_simulation(t_data *data, pthread_t **thread);
 
 //monitoring
+int		has_started(t_data *data);
 int		start_monitor(t_data *data, pthread_t **thread, int i);
 void	*monitoring(void *monitor);
 
-//actions 
+//actions
 void	go_sleep(t_philo *philo);
 void	try_eating(t_philo *philo_);
 void	death(t_philo *philo);
 
 //ending conditions
-int		has_started(t_data *data);
 int		has_ended(t_data *data);
 int		has_someone_died(t_data *data);
 int		is_minmeals_done(t_data *data);
 
 //utils
+int		must_stop(t_philo *philo);
 time_t	get_time(void);
 void	print_output(t_philo *philo, char *color, char *msg, int type);
 void	free_all(t_data *data, pthread_t **thread);
