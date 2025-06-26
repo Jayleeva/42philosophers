@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/24 13:23:51 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:00:24 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	init_data(int argc, char **argv, t_data *data)
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
-	data->death = 0;
+	data->stop = 0;
 	if (argc == 6)
 		data->minmeals = ft_atoi(argv[5]);
 	else
@@ -40,7 +40,7 @@ int	init_mutex(t_data *data)
 		write(2, "failed mutex init\n", 18);
 		return (1);
 	}
-	if (pthread_mutex_init(&(data)->dmutex, NULL) == -1)
+	if (pthread_mutex_init(&(data)->smutex, NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return (1);
