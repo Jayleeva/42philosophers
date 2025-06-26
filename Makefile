@@ -7,6 +7,7 @@ SRC =   main.c \
         init.c \
         utils.c \
         simulation.c \
+		monitor.c \
         actions.c \
         end_conditions.c
 

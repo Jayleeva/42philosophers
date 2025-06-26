@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/24 13:23:51 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:03:48 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv)
 	data.list = list;
 	list->data = &data;
 	init_mutex(&data);
-	thread = (pthread_t **)malloc((data.nphilo + 1) * sizeof(pthread_t *));
+	thread = (pthread_t **)malloc((data.nphilo + 2) * sizeof(pthread_t *));
 	if (!thread)
 		return (1);
 	if (start_simulation(&data, thread, list))

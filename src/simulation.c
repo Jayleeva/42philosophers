@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/24 15:20:33 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:59:04 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,17 @@ void	print_banner(char c)
 	}
 }
 
+//L'unique philosophe attend jusqu'a sa mort 
+void	one_philo(t_philo *philo)
+{
+	usleep(philo->data->time_to_die * 1000);
+	death(philo);
+}
+
 //Le thread (ou philo) prend le temps actuel comme temps du dernier repas; 
 // s'il est pair, il commence par dormir;
-// tant qu'une condition de fin n'est pas atteinte,
-// il vérifie s'il est lui-même mort, si c'est non, il essaye de manger. 
+// a l'infini (tant qu'une condition de fin n'est pas atteinte),
+// il essaye de manger. 
 void	*routine(void *philo)
 {
 	t_philo	*philo_;
@@ -40,48 +47,36 @@ void	*routine(void *philo)
 	philo_ = (t_philo *)philo;
 	if (philo_->data->nphilo == 1)
 	{
-		usleep(philo_->data->time_to_die * 1000);
-		death(philo_);
+		one_philo(philo);
+		return (philo_);
 	}
 	philo_->last_meal = get_time();
 	if (philo_->id % 2 == 0)
 		go_sleep(philo_);
-	while (!has_ended(philo_->data))
-	{
-		if (get_time() - philo_->last_meal >= philo_->data->time_to_die)
+	while (1)
+	{	
+		if (!pthread_mutex_lock(&(philo_->data->smutex)))
 		{
-			death(philo_);
-			return (philo_);
+			if (philo_->data->stop)
+			{
+				pthread_mutex_unlock(&(philo_->data->smutex));
+				break ;
+			}
+			pthread_mutex_unlock(&(philo_->data->smutex));
 		}
 		try_eating(philo_);
 	}
 	return (philo_);
 }
 
-
-void	*monitoring(void *monitor)
-{
-	t_monitor *monitor_;
-
-	monitor_ = (t_monitor *)monitor;
-	
-	return (monitor_);
-}
 //Lancement de la simulation: 
 //allocation mémoire puis création de chaque thread;
 //on avance dans les deux listes tout en les liant ensemble
 int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 {
-	t_monitor	*monitor;
-	pthread_t	*mthread;
-
 	int	i;
+
 	print_banner('S');
-	mthread = malloc(sizeof(pthread_t *));
-	if (!mthread)
-		return (1);
-	if (pthread_create(mthread, NULL, monitoring, monitor))
-		return (1);
 	i = 0;
 	while (i < data->nphilo)
 	{
@@ -94,6 +89,11 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 		list->data = data;
 		data->list = data->list->next;
 		i ++;
+	}
+	if (data->nphilo != 1)
+	{
+		if (start_monitor(data, thread, i))
+			return (1);
 	}
 	return (0);
 }
@@ -114,9 +114,11 @@ void	end_simulation(t_data *data, pthread_t **thread)
 		current = current->next;
 		i ++;
 	}
+	if (data->nphilo != 1)
+		pthread_join(*thread[i], NULL);
 	pthread_mutex_destroy(&(data)->mmutex);
 	pthread_mutex_destroy(&(data)->pmutex);
-	pthread_mutex_destroy(&(data)->dmutex);
+	pthread_mutex_destroy(&(data)->smutex);
 	print_banner('E');
 	free_all(data, thread);
 }

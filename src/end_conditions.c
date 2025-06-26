@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/23 15:37:46 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:49:27 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,20 @@
 //Vérification : est-ce qu'un des philo est déjà mort?
 int	has_someone_died(t_data *data)
 {
-	if (!pthread_mutex_lock(&(data->dmutex)))
+	int		i;
+	t_philo	*current;
+
+	current = data->list;
+	i = 0;
+	while (i < data->nphilo)
 	{
-		if (data->death)
+		if (get_time() - current->last_meal >= current->data->time_to_die)
 		{
-			pthread_mutex_unlock(&(data->dmutex));
+			death(current);
 			return (1);
 		}
-		pthread_mutex_unlock(&(data->dmutex));
+		current = current->next;
+		i ++;
 	}
 	return (0);
 }
@@ -66,4 +72,22 @@ int	has_ended(t_data *data)
 		return (1);
 	else
 		return (0);
+}
+
+//Verification : tous les threads ont-ils ete lances?
+int	has_started(t_data *data)
+{
+	int		i;
+	t_philo	*current;
+
+	current = data->list;
+	i = 0;
+	while (i < data->nphilo)
+	{
+		if (current->last_meal == 0)
+			return (0);
+		current = current->next;
+		i ++;
+	}
+	return (1);
 }

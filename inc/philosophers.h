@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/24 15:58:01 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:44:06 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,6 @@ typedef unsigned char	t_bool;
 # define KMAG  "\x1B[35m"
 # define KCYN  "\x1B[36m"
 
-typedef struct s_monitor
-{
-	struct s_data	*data;
-}					t_monitor;
-
 typedef struct s_philo
 {
 	int				id;
@@ -48,18 +43,18 @@ typedef struct s_philo
 
 typedef struct s_data
 {
-	int				nphilo;
-	time_t			time_to_die;
-	time_t			time_to_eat;
-	time_t			time_to_sleep;
-	int				death;
-	pthread_mutex_t	dmutex;
-	t_philo			*list;
-	int				minmeals;
-	pthread_mutex_t	mmutex;
-	char			*msg;
-	pthread_mutex_t	pmutex;
-}					t_data;
+	int					nphilo;
+	time_t				time_to_die;
+	time_t				time_to_eat;
+	time_t				time_to_sleep;
+	int					stop;
+	pthread_mutex_t		smutex;
+	t_philo				*list;
+	int					minmeals;
+	pthread_mutex_t		mmutex;
+	char				*msg;
+	pthread_mutex_t		pmutex;
+}						t_data;
 
 //parsing and init
 int		ft_atoi(const char *str);
@@ -74,12 +69,17 @@ void	*routine(void *philo);
 int		start_simulation(t_data *data, pthread_t **thread, t_philo *list);
 void	end_simulation(t_data *data, pthread_t **thread);
 
+//monitoring
+int		start_monitor(t_data *data, pthread_t **thread, int i);
+void	*monitoring(void *monitor);
+
 //actions 
 void	go_sleep(t_philo *philo);
 void	try_eating(t_philo *philo_);
 void	death(t_philo *philo);
 
 //ending conditions
+int		has_started(t_data *data);
 int		has_ended(t_data *data);
 int		has_someone_died(t_data *data);
 int		is_minmeals_done(t_data *data);
