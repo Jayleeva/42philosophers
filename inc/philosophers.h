@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 17:44:15 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/27 19:13:27 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_data
 	pthread_mutex_t		mmutex;
 	char				*msg;
 	pthread_mutex_t		pmutex;
+	t_philo				*monitor;
 }						t_data;
 
 //parsing and init

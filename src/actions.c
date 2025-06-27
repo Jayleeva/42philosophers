@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 17:58:08 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:15:23 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,19 @@ void	go_sleep(t_philo *philo)
 
 int	try_eating(t_philo *philo)
 {
-	time_t	tmp;
-
 	if (!pthread_mutex_lock(&(philo->fmutex)))
 	{
 		if (must_stop(philo))
 			return (1);
-		print_output(philo, KGRN, "has locked own fork\n");
+		print_output(philo, KGRN, "has taken a fork\n");
 		if (!pthread_mutex_lock(&(philo->next->fmutex)))
 		{
 			if (must_stop(philo))
 				return (2);
-			print_output(philo, KGRN, "has locked next fork\n");
+			print_output(philo, KGRN, "has taken a fork\n");
 			print_output(philo, KYEL, "is eating\n");
-			tmp = philo->last_meal;
-			philo->last_meal = get_time(philo->data);
-			if (get_time(philo->data) - tmp + philo->data->time_to_eat >= philo->data->time_to_die)
-				return (2);
 			usleep(philo->data->time_to_eat * 1000);
+			philo->last_meal = get_time(philo->data);
 			philo->nmeal ++;
 			pthread_mutex_unlock(&(philo->next->fmutex));
 			pthread_mutex_unlock(&(philo->fmutex));

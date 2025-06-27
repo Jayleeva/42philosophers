@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:00:24 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:08:06 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	init_philo(t_philo *current)
 
 	current->id = i;
 	current->fork_free = TRUE;
-	current->last_meal = 0;
+	current->last_meal = -1;
 	current->nmeal = 0;
 	current->next = NULL;
 	if (pthread_mutex_init(&(current->fmutex), NULL) == -1)
@@ -72,6 +72,8 @@ t_philo	*create_list(int nphilo)
 	t_philo	*head;
 	t_philo	*current;
 
+	if (nphilo == 0)
+		return (NULL);
 	head = (t_philo *)malloc(sizeof(t_philo));
 	if (!head)
 		return (NULL);

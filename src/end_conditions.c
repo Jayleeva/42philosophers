@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 17:49:36 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/27 19:14:11 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	free_all(t_data *data, pthread_t **thread)
 	t_philo	*current;
 	t_philo	*temp;
 
-	free(thread);
 	i = 0;
 	current = data->list;
 	while (i < data->nphilo)
@@ -87,6 +86,10 @@ void	free_all(t_data *data, pthread_t **thread)
 		temp = current;
 		current = current->next;
 		free(temp);
+		free(thread[i]);
 		i ++;
 	}
+	free(thread[i]);
+	free(thread);
+	free(data->monitor);
 }

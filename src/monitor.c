@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 16:19:53 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/27 19:14:04 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	has_started(t_data *data)
 	i = 0;
 	while (i < data->nphilo)
 	{
-		if (current->last_meal == 0)
+		if (current->last_meal == -1)
 			return (0);
 		current = current->next;
 		i ++;
@@ -30,6 +30,9 @@ int	has_started(t_data *data)
 	return (1);
 }
 
+//Routine du monitor: 
+//verifie a l'infini si une condition de fin a ete atteinte
+//si oui, passe le stop a TRUE avec un mutex, puis s'arrete
 void	*monitoring(void *monitor)
 {
 	t_philo	*monitor_;
@@ -50,6 +53,8 @@ void	*monitoring(void *monitor)
 	return (monitor_);
 }
 
+//Initialisation du monitor,
+//qui ne sera cree que lorsque tous les autres l'auront ete
 int	start_monitor(t_data *data, pthread_t **thread, int i)
 {
 	t_philo	*monitor;
@@ -59,6 +64,7 @@ int	start_monitor(t_data *data, pthread_t **thread, int i)
 		return (1);
 	init_philo(monitor);
 	monitor->data = data;
+	data->monitor = monitor;
 	while (1)
 	{
 		if (has_started(data))
@@ -66,8 +72,8 @@ int	start_monitor(t_data *data, pthread_t **thread, int i)
 	}
 	thread[i] = malloc(sizeof(pthread_t *));
 	if (!thread[i])
-		return (1);
+		return (free(monitor), 1);
 	if (pthread_create(thread[i], NULL, monitoring, monitor))
-		return (1);
+		return (free(monitor), 1);
 	return (0);
 }
