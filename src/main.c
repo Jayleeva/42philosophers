@@ -35,7 +35,7 @@ int	main(int argc, char **argv)
 	if (start_simulation(&data, thread, list))
 		return (1);
 	if (data.nphilo == 1)
-		end_one_philo(&data, thread);
+		end_one_philo(&data);
 	else
 		end_simulation(&data, thread);
 	return (0);

@@ -55,11 +55,6 @@ void	*routine(void *philo)
 	t_philo	*philo_;
 
 	philo_ = (t_philo *)philo;
-	if (philo_->data->nphilo == 1)
-	{
-		one_philo(philo);
-		return (philo_);
-	}
 	if (!pthread_mutex_lock(&(philo_->pmmutex)))
 	{
 		philo_->last_meal = get_time(philo_->data);
@@ -80,6 +75,11 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 
 	print_banner('S');
 	data->time = get_init_time();
+	if (data->nphilo == 1)
+	{
+		one_philo(list);
+		return (0);
+	}
 	i = 0;
 	while (i < data->nphilo)
 	{
@@ -93,11 +93,8 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 		data->list = data->list->next;
 		i ++;
 	}
-	if (data->nphilo != 1)
-	{
-		if (start_monitor(data, thread, i))
-			return (1);
-	}
+	if (start_monitor(data, thread, i))
+		return (1);
 	return (0);
 }
 

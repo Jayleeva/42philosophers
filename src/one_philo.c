@@ -16,13 +16,12 @@
 void	one_philo(t_philo *philo)
 {
 	usleep(philo->data->time_to_die * 1000);
-	death(philo);
+	print_output(philo, KRED, "died\n");
 }
 
 //Join, destroy et free si un seul philosophe
-void	end_one_philo(t_data *data, pthread_t **thread)
+void	end_one_philo(t_data *data)
 {
-	pthread_join(*thread[0], NULL);
 	pthread_mutex_destroy(&(data->list->fmutex));
 	pthread_mutex_destroy(&(data->list->pmmutex));
 	pthread_mutex_destroy(&(data)->mmutex);
@@ -30,6 +29,4 @@ void	end_one_philo(t_data *data, pthread_t **thread)
 	pthread_mutex_destroy(&(data)->smutex);
 	print_banner('E');
 	free(data->list);
-	free(thread[0]);
-	free(thread);
 }

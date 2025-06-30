@@ -30,27 +30,11 @@ int	init_data(int argc, char **argv, t_data *data)
 //Initialisation des mutex autres que les fourchettes
 int	init_mutex(t_data *data)
 {
-	if (pthread_mutex_init(&(data)->pmutex, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->mmutex, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->smutex, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->tmutex, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->temutex, NULL) == -1)
+	if (pthread_mutex_init(&(data)->pmutex, NULL) == -1
+		|| pthread_mutex_init(&(data)->mmutex, NULL) == -1
+		|| pthread_mutex_init(&(data)->smutex, NULL) == -1
+		|| pthread_mutex_init(&(data)->tmutex, NULL) == -1
+		|| pthread_mutex_init(&(data)->temutex, NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return (1);

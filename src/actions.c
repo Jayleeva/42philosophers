@@ -24,8 +24,17 @@ void	go_sleep(t_philo *philo)
 	print_output(philo, KCYN, "is thinking\n");
 }
 
-void	try_eating_utils(t_philo *philo)
+void	eat(t_philo *philo)
 {
+	time_t	time_to_eat;
+
+	time_to_eat = 0;
+	if (!pthread_mutex_lock(&(philo->data->temutex)))
+	{
+		time_to_eat = philo->data->time_to_eat;
+		pthread_mutex_unlock(&(philo->data->temutex));
+	}
+	usleep(time_to_eat * 1000);
 	if (!pthread_mutex_lock(&(philo->next->pmmutex)))
 	{
 		philo->last_meal = get_time(philo->data);
@@ -39,8 +48,6 @@ void	try_eating_utils(t_philo *philo)
 // sinon, il réfléchit
 int	try_eating(t_philo *philo)
 {
-	time_t	time_to_eat;
-
 	if (!pthread_mutex_lock(&(philo->fmutex)))
 	{
 		if (must_stop(philo))
@@ -52,13 +59,7 @@ int	try_eating(t_philo *philo)
 				return (2);
 			print_output(philo, KGRN, "has taken a fork\n");
 			print_output(philo, KYEL, "is eating\n");
-			if (!pthread_mutex_lock(&(philo->data->temutex))) // data race avec la variable data?
-			{
-				time_to_eat = philo->data->time_to_eat;
-				pthread_mutex_unlock(&(philo->data->temutex));
-				usleep(time_to_eat * 1000);
-			}
-			try_eating_utils(philo);
+			eat(philo);
 			pthread_mutex_unlock(&(philo->next->fmutex));
 			pthread_mutex_unlock(&(philo->fmutex));
 			go_sleep(philo);

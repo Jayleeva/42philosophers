@@ -72,7 +72,7 @@ int		init_data(int argc, char **argv, t_data *data);
 
 //un seul philosophe
 void	one_philo(t_philo *philo);
-void	end_one_philo(t_data *data, pthread_t **thread);
+void	end_one_philo(t_data *data);
 
 //simulation
 void	*routine(void *philo);
