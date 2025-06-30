@@ -6,6 +6,7 @@ OBJ_DIR = ./obj
 SRC =   main.c \
         init.c \
         utils.c \
+		one_philo.c \
         simulation.c \
 		monitor.c \
         actions.c \

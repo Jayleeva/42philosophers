@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/26 15:03:48 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 12:19:22 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ int	main(int argc, char **argv)
 		return (1);
 	if (start_simulation(&data, thread, list))
 		return (1);
-	end_simulation(&data, thread);
+	if (data.nphilo == 1)
+		end_one_philo(&data, thread);
+	else
+		end_simulation(&data, thread);
 	return (0);
 }

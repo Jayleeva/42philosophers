@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/27 18:29:26 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:11:48 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,6 @@ void	print_banner(char c)
 		printf("--- END OF SIMULATION ---\n");
 		printf("==========================\n");
 	}
-}
-
-//L'unique philosophe attend jusqu'a sa mort 
-void	one_philo(t_philo *philo)
-{
-	usleep(philo->data->time_to_die * 1000);
-	death(philo);
 }
 
 //Le thread (ou philo) prend le temps actuel comme temps du dernier repas; 
@@ -60,7 +53,10 @@ void	*routine(void *philo)
 		if (tmp == 1)
 			pthread_mutex_unlock(&(philo_->fmutex));
 		else if (tmp == 2)
+		{
+			pthread_mutex_unlock(&(philo_->fmutex));
 			pthread_mutex_unlock(&(philo_->next->fmutex));
+		}
 	}
 	return (philo_);
 }
@@ -111,8 +107,7 @@ void	end_simulation(t_data *data, pthread_t **thread)
 		current = current->next;
 		i ++;
 	}
-	if (data->nphilo != 1)
-		pthread_join(*thread[i], NULL);
+	pthread_join(*thread[i], NULL);
 	pthread_mutex_destroy(&(data)->mmutex);
 	pthread_mutex_destroy(&(data)->pmutex);
 	pthread_mutex_destroy(&(data)->smutex);

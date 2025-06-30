@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/27 19:14:04 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:52:44 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ void	*monitoring(void *monitor)
 			if (!pthread_mutex_lock(&(monitor_->data->smutex)))
 			{
 				monitor_->data->stop = 1;
-				pthread_mutex_unlock(&(monitor_->data->smutex));
 				break ;
 			}
 		}
 	}
+	pthread_mutex_unlock(&(monitor_->data->smutex));
 	return (monitor_);
 }
 
