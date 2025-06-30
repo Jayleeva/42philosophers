@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:28:16 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:53:28 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void	end_simulation(t_data *data, pthread_t **thread)
 	pthread_mutex_destroy(&(data)->mmutex);
 	pthread_mutex_destroy(&(data)->pmutex);
 	pthread_mutex_destroy(&(data)->smutex);
+	pthread_mutex_destroy(&(data)->tmutex);
 	print_banner('E');
 	free_all(data, thread);
 }

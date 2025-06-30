@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:28:36 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:53:19 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_data
 {
 	struct timeval		stime;
 	time_t				time;
+	pthread_mutex_t		tmutex;
 	int					nphilo;
 	time_t				time_to_die;
 	time_t				time_to_eat;
