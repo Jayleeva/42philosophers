@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/27 19:14:11 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:31:15 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,18 @@ int	has_someone_died(t_data *data)
 	i = 0;
 	while (i < data->nphilo)
 	{
-		if (get_time(data) - current->last_meal >= current->data->time_to_die)
+		if (!pthread_mutex_lock(&(current->pmmutex)))
 		{
-			death(current);
-			return (1);
+			if (get_time(data) - current->last_meal >= current->data->time_to_die)
+			{
+				pthread_mutex_unlock(&(current->pmmutex));
+				death(current);
+				return (1);
+			}
+			pthread_mutex_unlock(&(current->pmmutex));
+			current = current->next;
+			i ++;
 		}
-		current = current->next;
-		i ++;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 13:11:53 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:27:44 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ void	init_philo(t_philo *current)
 	current->nmeal = 0;
 	current->next = NULL;
 	if (pthread_mutex_init(&(current->fmutex), NULL) == -1)
+	{
+		write(2, "failed mutex init\n", 18);
+		return ;
+	}
+	if (pthread_mutex_init(&(current->pmmutex), NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return ;

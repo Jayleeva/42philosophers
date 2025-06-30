@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 12:48:36 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:35:02 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,12 @@ int	try_eating(t_philo *philo)
 			print_output(philo, KGRN, "has taken a fork\n");
 			print_output(philo, KYEL, "is eating\n");
 			usleep(philo->data->time_to_eat * 1000);
-			philo->last_meal = get_time(philo->data);
-			philo->nmeal ++;
+			if (!pthread_mutex_lock(&(philo->next->pmmutex)))
+			{
+				philo->last_meal = get_time(philo->data);
+				philo->nmeal ++;
+				pthread_mutex_unlock(&(philo->next->pmmutex));
+			}
 			pthread_mutex_unlock(&(philo->next->fmutex));
 			pthread_mutex_unlock(&(philo->fmutex));
 			go_sleep(philo);

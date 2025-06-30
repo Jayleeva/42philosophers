@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 12:23:39 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:28:36 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_philo
 	pthread_mutex_t	fmutex;
 	int				nmeal;
 	time_t			last_meal;
+	pthread_mutex_t	pmmutex;
 	struct s_philo	*next;
 	struct s_data	*data;
 }					t_philo;
