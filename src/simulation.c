@@ -86,10 +86,10 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 		thread[i] = malloc(sizeof(pthread_t *));
 		if (!thread[i])
 			return (1);
+		list->data = data;
 		if (pthread_create(thread[i], NULL, routine, list))
 			return (1);
 		list = list->next;
-		list->data = data;
 		data->list = data->list->next;
 		i ++;
 	}
