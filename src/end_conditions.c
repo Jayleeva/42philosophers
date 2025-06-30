@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:53:12 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:55:25 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	has_someone_died(t_data *data)
 	{
 		if (!pthread_mutex_lock(&(current->pmmutex)))
 		{
-			if (get_time(data) - current->last_meal >= current->data->time_to_die)
+			if (get_time(data) - current->last_meal
+				>= current->data->time_to_die)
 			{
 				pthread_mutex_unlock(&(current->pmmutex));
 				death(current);

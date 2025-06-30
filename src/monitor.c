@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:11:58 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:03:45 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,15 @@ int	has_started(t_data *data)
 	i = 0;
 	while (i < data->nphilo)
 	{
-		if (current->last_meal == -1)
-			return (0);
+		if (!pthread_mutex_lock(&(current->pmmutex)))
+		{
+			if (current->last_meal == -1)
+			{
+				pthread_mutex_unlock(&(current->pmmutex));
+				return (0);
+			}
+			pthread_mutex_unlock(&(current->pmmutex));
+		}
 		current = current->next;
 		i ++;
 	}

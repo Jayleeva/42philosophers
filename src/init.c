@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:53:24 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:13:56 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ int	init_mutex(t_data *data)
 		return (1);
 	}
 	if (pthread_mutex_init(&(data)->tmutex, NULL) == -1)
+	{
+		write(2, "failed mutex init\n", 18);
+		return (1);
+	}
+	if (pthread_mutex_init(&(data)->temutex, NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return (1);

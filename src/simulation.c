@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:53:28 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:14:06 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,30 @@ void	print_banner(char c)
 	}
 }
 
-//Le thread (ou philo) prend le temps actuel comme temps du dernier repas; 
-// s'il est pair, il commence par dormir;
 // tant qu'une condition de fin n'a pas ete atteinte,
 // il essaye de manger.
+void	philo_loop(t_philo *philo)
+{
+	int		tmp;
+
+	while (!must_stop(philo))
+	{
+		tmp = try_eating(philo);
+		if (tmp == 1)
+			pthread_mutex_unlock(&(philo->fmutex));
+		else if (tmp == 2)
+		{
+			pthread_mutex_unlock(&(philo->fmutex));
+			pthread_mutex_unlock(&(philo->next->fmutex));
+		}
+	}
+}
+
+//Le thread (ou philo) prend le temps actuel comme temps du dernier repas; 
+// s'il est pair, il commence par dormir;
 void	*routine(void *philo)
 {
 	t_philo	*philo_;
-	int		tmp;
 
 	philo_ = (t_philo *)philo;
 	if (philo_->data->nphilo == 1)
@@ -44,20 +60,14 @@ void	*routine(void *philo)
 		one_philo(philo);
 		return (philo_);
 	}
-	philo_->last_meal = get_time(philo_->data);
+	if (!pthread_mutex_lock(&(philo_->pmmutex)))
+	{
+		philo_->last_meal = get_time(philo_->data);
+		pthread_mutex_unlock(&(philo_->pmmutex));
+	}
 	if (philo_->id % 2 == 0)
 		go_sleep(philo_);
-	while (!must_stop(philo_))
-	{
-		tmp = try_eating(philo_);
-		if (tmp == 1)
-			pthread_mutex_unlock(&(philo_->fmutex));
-		else if (tmp == 2)
-		{
-			pthread_mutex_unlock(&(philo_->fmutex));
-			pthread_mutex_unlock(&(philo_->next->fmutex));
-		}
-	}
+	philo_loop(philo_);
 	return (philo_);
 }
 
@@ -113,6 +123,7 @@ void	end_simulation(t_data *data, pthread_t **thread)
 	pthread_mutex_destroy(&(data)->pmutex);
 	pthread_mutex_destroy(&(data)->smutex);
 	pthread_mutex_destroy(&(data)->tmutex);
+	pthread_mutex_destroy(&(data)->temutex);
 	print_banner('E');
 	free_all(data, thread);
 }
