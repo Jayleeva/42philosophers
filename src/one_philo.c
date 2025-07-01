@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:47:43 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:49:16 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 void	one_philo(t_philo *philo)
 {
 	usleep(philo->data->time_to_die * 1000);
-	death(philo);
+	print_output(philo, KRED, "died\n");
 }
 
 //Join, destroy et free si un seul philosophe
