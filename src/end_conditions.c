@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 13:04:16 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:17:06 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	has_someone_died(t_data *data)
 		if (!pthread_mutex_lock(&(current->lmeal_mtx)))
 		{
 			if (get_time(data) - current->last_meal
-				>= current->time_to_die)
+				>= current->data->time_to_die)
 			{
 				pthread_mutex_unlock(&(current->lmeal_mtx));
 				death(current);
@@ -46,19 +46,25 @@ int	is_minmeals_done(t_data *data)
 	t_philo	*current;
 
 	current = data->list;
-	if (current->minmeals > -1)
+	if (!pthread_mutex_lock(&(data->mmeals_mtx)))
 	{
-		i = 0;
-		while (i < data->nphilo)
+		if (data->minmeals > -1)
 		{
-			if (current->nmeal < data->minmeals)
+			i = 0;
+			while (i < data->nphilo)
 			{
-				return (0);
+				if (current->nmeal < data->minmeals)
+				{
+					pthread_mutex_unlock(&(data->mmeals_mtx));
+					return (0);
+				}
+				current = current->next;
+				i ++;
 			}
-			current = current->next;
-			i ++;
+			pthread_mutex_unlock(&(data->mmeals_mtx));
+			return (1);
 		}
-		return (1);
+		pthread_mutex_unlock(&(data->mmeals_mtx));
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 13:02:06 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:16:29 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,11 @@ typedef struct s_philo
 	pthread_mutex_t	lmeal_mtx;
 	struct s_philo	*next;
 	struct s_data	*data;
-	time_t			time_to_die;
-	time_t			time_to_eat;
-	time_t			time_to_sleep;
-	int				minmeals;
 }					t_philo;
 
 typedef struct s_data
 {
+	struct timeval		stime;
 	time_t				time;
 	pthread_mutex_t		time_mtx;
 	int					nphilo;
@@ -59,7 +56,7 @@ typedef struct s_data
 	pthread_mutex_t		stop_mtx;
 	t_philo				*list;
 	int					minmeals;
-	pthread_mutex_t		mmeal_mtx;
+	pthread_mutex_t		mmeals_mtx;
 	char				*msg;
 	pthread_mutex_t		print_mtx;
 	t_philo				*monitor;
@@ -75,10 +72,11 @@ int		init_data(int argc, char **argv, t_data *data);
 
 //un seul philosophe
 void	one_philo(t_philo *philo);
-void	end_one_philo(t_data *data);
+void	end_one_philo(t_data *data, pthread_t **thread);
 
 //simulation
 void	*routine(void *philo);
+void	philo_loop(t_philo *philo);
 int		start_simulation(t_data *data, pthread_t **thread, t_philo *list);
 void	end_simulation(t_data *data, pthread_t **thread);
 

@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 13:12:34 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:17:56 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	print_banner(char c)
 	}
 }
 
+
 //Le thread (ou philo) prend le temps actuel comme temps du dernier repas; 
 // s'il est pair, il commence par dormir;
 // tant qu'une condition de fin n'a pas ete atteinte,
@@ -37,7 +38,7 @@ void	*routine(void *philo)
 {
 	t_philo	*philo_;
 	int		tmp;
-
+	
 	philo_ = (t_philo *)philo;
 	if (!pthread_mutex_lock(&(philo_->lmeal_mtx)))
 	{
@@ -87,8 +88,11 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 		data->list = data->list->next;
 		i ++;
 	}
-	if (start_monitor(data, thread, i))
-		return (1);
+	if (data->nphilo != 1)
+	{
+		if (start_monitor(data, thread, i))
+			return (1);
+	}
 	return (0);
 }
 
@@ -99,21 +103,22 @@ void	end_simulation(t_data *data, pthread_t **thread)
 	int		i;
 	t_philo	*current;
 
-	usleep(5);
 	i = 0;
 	current = data->list;
 	while (i < data->nphilo)
 	{
 		pthread_join(*thread[i], NULL);
-		pthread_mutex_destroy(&(current->f_mtx)); // essaye de destroy alors que pas fini.
+		pthread_mutex_destroy(&(current->f_mtx));
 		pthread_mutex_destroy(&(current->lmeal_mtx));
 		current = current->next;
 		i ++;
 	}
 	pthread_join(*thread[i], NULL);
+	pthread_mutex_destroy(&(data)->mmeals_mtx);
 	pthread_mutex_destroy(&(data)->print_mtx);
 	pthread_mutex_destroy(&(data)->stop_mtx);
 	pthread_mutex_destroy(&(data)->time_mtx);
+	pthread_mutex_destroy(&(data)->tte_mtx);
 	print_banner('E');
 	free_all(data, thread);
 }
