@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:23:16 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 15:49:28 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,16 @@ time_t	get_init_time(void)
 time_t	get_time(t_data *data)
 {
 	struct timeval	time;
+	time_t			tmp;
 
 	if (!pthread_mutex_lock(&(data->time_mtx)))
 	{
+		tmp = data->time;
+		pthread_mutex_unlock(&(data->time_mtx));
 		if (gettimeofday(&time, NULL) == -1)
 			write(2, "gettimeofday() error\n", 22);
-		pthread_mutex_unlock(&(data->time_mtx));
 	}
-	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000 - data->time);
+	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000 - tmp);
 }
 
 //Verification : le philosophe doit-il s'arreter?

@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:49:16 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 17:08:19 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	end_one_philo(t_data *data)
 {
 	pthread_mutex_destroy(&(data->list->f_mtx));
 	pthread_mutex_destroy(&(data->list->lmeal_mtx));
-	pthread_mutex_destroy(&(data)->mmeals_mtx);
 	pthread_mutex_destroy(&(data)->print_mtx);
 	pthread_mutex_destroy(&(data)->stop_mtx);
 	print_banner('E');

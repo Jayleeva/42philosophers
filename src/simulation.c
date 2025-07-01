@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:38:45 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 17:08:21 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	print_banner(char c)
 void	*routine(void *philo)
 {
 	t_philo	*philo_;
-	int		tmp;
 
 	philo_ = (t_philo *)philo;
 	if (!pthread_mutex_lock(&(philo_->lmeal_mtx)))
@@ -48,14 +47,7 @@ void	*routine(void *philo)
 		go_sleep(philo_);
 	while (!must_stop(philo))
 	{
-		tmp = try_eating(philo);
-		if (tmp == 1)
-			pthread_mutex_unlock(&(philo_->f_mtx));
-		else if (tmp == 2)
-		{
-			pthread_mutex_unlock(&(philo_->f_mtx));
-			pthread_mutex_unlock(&(philo_->next->f_mtx));
-		}
+		try_eating(philo);
 	}
 	return (philo_);
 }
@@ -92,9 +84,7 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 	return (0);
 }
 
-//Fin de la simulation: 
-//on join les thread, détruit les mutex, libère la mémoire allouée.
-void	end_simulation(t_data *data, pthread_t **thread)
+void	join(t_data *data, pthread_t **thread)
 {
 	int		i;
 	t_philo	*current;
@@ -104,17 +94,32 @@ void	end_simulation(t_data *data, pthread_t **thread)
 	while (i < data->nphilo)
 	{
 		pthread_join(*thread[i], NULL);
+		current = current->next;
+		i ++;
+	}
+}
+
+//Fin de la simulation: 
+//on join les thread, détruit les mutex, libère la mémoire allouée.
+void	end_simulation(t_data *data, pthread_t **thread)
+{
+	int		i;
+	t_philo	*current;
+
+	join(data, thread);
+	i = 0;
+	current = data->list;
+	while (i < data->nphilo)
+	{
 		pthread_mutex_destroy(&(current->f_mtx));
 		pthread_mutex_destroy(&(current->lmeal_mtx));
 		current = current->next;
 		i ++;
 	}
 	pthread_join(*thread[i], NULL);
-	pthread_mutex_destroy(&(data)->mmeals_mtx);
 	pthread_mutex_destroy(&(data)->print_mtx);
 	pthread_mutex_destroy(&(data)->stop_mtx);
 	pthread_mutex_destroy(&(data)->time_mtx);
-	pthread_mutex_destroy(&(data)->tte_mtx);
 	print_banner('E');
 	free_all(data, thread);
 }

@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:47:56 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 17:14:01 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ typedef struct s_data
 	time_t				time_to_die;
 	time_t				time_to_eat;
 	time_t				time_to_sleep;
-	pthread_mutex_t		tte_mtx;
 	int					minmeals;
-	pthread_mutex_t		mmeals_mtx;
 	int					stop;
 	pthread_mutex_t		stop_mtx;
 	pthread_mutex_t		print_mtx;
@@ -74,8 +72,8 @@ void	end_one_philo(t_data *data);
 
 //simulation
 void	*routine(void *philo);
-void	philo_loop(t_philo *philo);
 int		start_simulation(t_data *data, pthread_t **thread, t_philo *list);
+void	join(t_data *data, pthread_t **thread);
 void	end_simulation(t_data *data, pthread_t **thread);
 
 //monitoring
@@ -93,13 +91,13 @@ void	death(t_philo *philo);
 int		has_ended(t_data *data);
 int		has_someone_died(t_data *data);
 int		is_minmeals_done(t_data *data);
+void	free_all(t_data *data, pthread_t **thread);
 
 //utils
 int		must_stop(t_philo *philo);
 time_t	get_init_time(void);
 time_t	get_time(t_data *data);
 void	print_output(t_philo *philo, char *color, char *msg);
-void	free_all(t_data *data, pthread_t **thread);
 
 //decoration
 void	print_banner(char c);

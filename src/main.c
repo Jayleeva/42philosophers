@@ -6,32 +6,30 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:47:21 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 17:48:29 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-void	end(t_data *data, pthread_t **thread)
+int	args_invalid(char **argv)
 {
-	if (data->nphilo == 1)
-		end_one_philo(data);
-	else
+	int	i;
+	int	j;
+
+	i = 1;
+	while (argv[i])
 	{
-		while (1)
+		j = 0;
+		while (argv[i][j])
 		{
-			if (!pthread_mutex_lock(&(data->stop_mtx)))
-			{
-				if (data->stop)
-				{
-					pthread_mutex_unlock(&(data->stop_mtx));
-					break;
-				}
-				pthread_mutex_unlock(&(data->stop_mtx));
-			}
+			if (argv[i][j] < '0' || argv[i][j] > '9')
+				return (1);
+			j ++;
 		}
-		end_simulation(data, thread);
+		i ++;
 	}
+	return (0);
 }
 
 //Lancement et arrêt du programme : 
@@ -43,6 +41,8 @@ int	main(int argc, char **argv)
 	pthread_t	**thread;
 
 	if (argc < 5 || argc > 6)
+		return (1);
+	if (args_invalid(argv))
 		return (1);
 	init_data(argc, argv, &data);
 	list = create_list(data.nphilo);
@@ -56,6 +56,9 @@ int	main(int argc, char **argv)
 		return (1);
 	if (start_simulation(&data, thread, list))
 		return (1);
-	end(&data, thread);
+	if (data.nphilo == 1)
+		end_one_philo(&data);
+	else
+		end_simulation(&data, thread);
 	return (0);
 }

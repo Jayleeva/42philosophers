@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:28:56 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 17:10:40 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ int	init_data(int argc, char **argv, t_data *data)
 int	init_mutex(t_data *data)
 {
 	if (pthread_mutex_init(&(data)->print_mtx, NULL) == -1
-		|| pthread_mutex_init(&(data)->mmeals_mtx, NULL) == -1
 		|| pthread_mutex_init(&(data)->stop_mtx, NULL) == -1
-		|| pthread_mutex_init(&(data)->time_mtx, NULL) == -1
-		|| pthread_mutex_init(&(data)->tte_mtx, NULL) == -1)
+		|| pthread_mutex_init(&(data)->time_mtx, NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return (1);
@@ -52,12 +50,8 @@ void	init_philo(t_philo *current)
 	current->last_meal = -1;
 	current->nmeal = 0;
 	current->next = NULL;
-	if (pthread_mutex_init(&(current->f_mtx), NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return ;
-	}
-	if (pthread_mutex_init(&(current->lmeal_mtx), NULL) == -1)
+	if (pthread_mutex_init(&(current->f_mtx), NULL) == -1
+		|| pthread_mutex_init(&(current->lmeal_mtx), NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return ;
