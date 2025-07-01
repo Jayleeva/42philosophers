@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 15:03:45 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 12:26:27 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ int	has_started(t_data *data)
 	i = 0;
 	while (i < data->nphilo)
 	{
-		if (!pthread_mutex_lock(&(current->pmmutex)))
+		if (!pthread_mutex_lock(&(current->lmeal_mtx)))
 		{
 			if (current->last_meal == -1)
 			{
-				pthread_mutex_unlock(&(current->pmmutex));
+				pthread_mutex_unlock(&(current->lmeal_mtx));
 				return (0);
 			}
-			pthread_mutex_unlock(&(current->pmmutex));
+			pthread_mutex_unlock(&(current->lmeal_mtx));
 		}
 		current = current->next;
 		i ++;
@@ -49,10 +49,10 @@ void	*monitoring(void *monitor)
 	{
 		if (has_ended(monitor_->data))
 		{
-			if (!pthread_mutex_lock(&(monitor_->data->smutex)))
+			if (!pthread_mutex_lock(&(monitor_->data->stop_mtx)))
 			{
 				monitor_->data->stop = 1;
-				pthread_mutex_unlock(&(monitor_->data->smutex));
+				pthread_mutex_unlock(&(monitor_->data->stop_mtx));
 				break ;
 			}
 		}

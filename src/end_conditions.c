@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:55:25 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 13:04:16 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ int	has_someone_died(t_data *data)
 	i = 0;
 	while (i < data->nphilo)
 	{
-		if (!pthread_mutex_lock(&(current->pmmutex)))
+		if (!pthread_mutex_lock(&(current->lmeal_mtx)))
 		{
 			if (get_time(data) - current->last_meal
-				>= current->data->time_to_die)
+				>= current->time_to_die)
 			{
-				pthread_mutex_unlock(&(current->pmmutex));
+				pthread_mutex_unlock(&(current->lmeal_mtx));
 				death(current);
 				return (1);
 			}
-			pthread_mutex_unlock(&(current->pmmutex));
+			pthread_mutex_unlock(&(current->lmeal_mtx));
 			current = current->next;
 			i ++;
 		}
@@ -46,25 +46,19 @@ int	is_minmeals_done(t_data *data)
 	t_philo	*current;
 
 	current = data->list;
-	if (!pthread_mutex_lock(&(data->mmutex)))
+	if (current->minmeals > -1)
 	{
-		if (data->minmeals > -1)
+		i = 0;
+		while (i < data->nphilo)
 		{
-			i = 0;
-			while (i < data->nphilo)
+			if (current->nmeal < data->minmeals)
 			{
-				if (current->nmeal < data->minmeals)
-				{
-					pthread_mutex_unlock(&(data->mmutex));
-					return (0);
-				}
-				current = current->next;
-				i ++;
+				return (0);
 			}
-			pthread_mutex_unlock(&(data->mmutex));
-			return (1);
+			current = current->next;
+			i ++;
 		}
-		pthread_mutex_unlock(&(data->mmutex));
+		return (1);
 	}
 	return (0);
 }

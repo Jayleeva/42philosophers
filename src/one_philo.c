@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 14:29:17 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 12:26:55 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	one_philo(t_philo *philo)
 //Join, destroy et free si un seul philosophe
 void	end_one_philo(t_data *data)
 {
-	pthread_mutex_destroy(&(data->list->fmutex));
-	pthread_mutex_destroy(&(data->list->pmmutex));
-	pthread_mutex_destroy(&(data)->mmutex);
-	pthread_mutex_destroy(&(data)->pmutex);
-	pthread_mutex_destroy(&(data)->smutex);
+	pthread_mutex_destroy(&(data->list->f_mtx));
+	pthread_mutex_destroy(&(data->list->lmeal_mtx));
+	pthread_mutex_destroy(&(data)->mmeal_mtx);
+	pthread_mutex_destroy(&(data)->print_mtx);
+	pthread_mutex_destroy(&(data)->stop_mtx);
 	print_banner('E');
 	free(data->list);
 }

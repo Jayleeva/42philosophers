@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 15:13:37 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 13:02:06 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,34 @@ typedef struct s_philo
 {
 	int				id;
 	t_bool			fork_free;
-	pthread_mutex_t	fmutex;
+	pthread_mutex_t	f_mtx;
 	int				nmeal;
 	time_t			last_meal;
-	pthread_mutex_t	pmmutex;
+	pthread_mutex_t	lmeal_mtx;
 	struct s_philo	*next;
 	struct s_data	*data;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
+	int				minmeals;
 }					t_philo;
 
 typedef struct s_data
 {
-	struct timeval		stime;
 	time_t				time;
-	pthread_mutex_t		tmutex;
+	pthread_mutex_t		time_mtx;
 	int					nphilo;
 	time_t				time_to_die;
 	time_t				time_to_eat;
 	time_t				time_to_sleep;
-	pthread_mutex_t		temutex;
+	pthread_mutex_t		tte_mtx;
 	int					stop;
-	pthread_mutex_t		smutex;
+	pthread_mutex_t		stop_mtx;
 	t_philo				*list;
 	int					minmeals;
-	pthread_mutex_t		mmutex;
+	pthread_mutex_t		mmeal_mtx;
 	char				*msg;
-	pthread_mutex_t		pmutex;
+	pthread_mutex_t		print_mtx;
 	t_philo				*monitor;
 }						t_data;
 
@@ -76,7 +79,6 @@ void	end_one_philo(t_data *data);
 
 //simulation
 void	*routine(void *philo);
-void	philo_loop(t_philo *philo);
 int		start_simulation(t_data *data, pthread_t **thread, t_philo *list);
 void	end_simulation(t_data *data, pthread_t **thread);
 

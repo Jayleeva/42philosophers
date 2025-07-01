@@ -2,15 +2,195 @@
 ========================
 - START OF SIMULATION -
 ========================
-[32m7 1 has taken a fork
-[32m8 1 has taken a fork
-[33m8 1 is eating
-[35m10 2 is sleeping
-[32m11 3 has taken a fork
-[32m11 3 has taken a fork
-[33m11 3 is eating
-[35m12 4 is sleeping
-[31m316 1 died
+[32m1 1 has taken a fork
+[32m1 1 has taken a fork
+[33m1 1 is eating
+[35m1 2 is sleeping
+[32m1 3 has taken a fork
+[32m1 3 has taken a fork
+[33m1 3 is eating
+[35m1 4 is sleeping
+[32m1 5 has taken a fork
+[35m201 3 is sleeping
+[35m201 1 is sleeping
+[32m201 5 has taken a fork
+[33m201 5 is eating
+[36m201 2 is thinking
+[32m201 2 has taken a fork
+[32m201 2 has taken a fork
+[33m201 2 is eating
+[36m201 4 is thinking
+[32m201 4 has taken a fork
+[36m401 3 is thinking
+[35m401 5 is sleeping
+[36m401 1 is thinking
+[32m401 1 has taken a fork
+[32m401 4 has taken a fork
+[33m401 4 is eating
+[32m401 3 has taken a fork
+[35m401 2 is sleeping
+[32m401 1 has taken a fork
+[33m401 1 is eating
+[36m601 5 is thinking
+[36m601 2 is thinking
+[35m601 4 is sleeping
+[32m601 5 has taken a fork
+[32m601 3 has taken a fork
+[33m601 3 is eating
+[35m601 1 is sleeping
+[32m601 5 has taken a fork
+[33m601 5 is eating
+[32m601 2 has taken a fork
+[35m801 3 is sleeping
+[36m801 4 is thinking
+[32m801 4 has taken a fork
+[36m801 1 is thinking
+[32m801 2 has taken a fork
+[33m801 2 is eating
+[35m801 5 is sleeping
+[32m801 1 has taken a fork
+[32m801 4 has taken a fork
+[33m801 4 is eating
+[36m1001 3 is thinking
+[35m1001 2 is sleeping
+[35m1001 4 is sleeping
+[32m1001 1 has taken a fork
+[33m1001 1 is eating
+[32m1001 3 has taken a fork
+[32m1001 3 has taken a fork
+[33m1001 3 is eating
+[36m1001 5 is thinking
+[32m1001 5 has taken a fork
+[36m1201 2 is thinking
+[36m1201 4 is thinking
+[35m1201 1 is sleeping
+[32m1201 2 has taken a fork
+[35m1201 3 is sleeping
+[32m1201 4 has taken a fork
+[32m1201 2 has taken a fork
+[33m1201 2 is eating
+[32m1201 5 has taken a fork
+[33m1201 5 is eating
+[36m1401 3 is thinking
+[35m1401 5 is sleeping
+[32m1401 4 has taken a fork
+[36m1401 1 is thinking
+[32m1401 3 has taken a fork
+[32m1401 1 has taken a fork
+[33m1401 4 is eating
+[35m1401 2 is sleeping
+[32m1401 1 has taken a fork
+[33m1401 1 is eating
+[36m1601 5 is thinking
+[36m1601 2 is thinking
+[32m1601 2 has taken a fork
+[35m1601 1 is sleeping
+[35m1601 4 is sleeping
+[32m1601 3 has taken a fork
+[33m1601 3 is eating
+[32m1601 5 has taken a fork
+[32m1601 5 has taken a fork
+[33m1601 5 is eating
+[35m1801 3 is sleeping
+[36m1801 1 is thinking
+[32m1801 2 has taken a fork
+[33m1801 2 is eating
+[36m1801 4 is thinking
+[32m1801 4 has taken a fork
+[35m1801 5 is sleeping
+[32m1801 4 has taken a fork
+[33m1802 4 is eating
+[32m1802 1 has taken a fork
+[36m2001 3 is thinking
+[35m2002 2 is sleeping
+[32m2002 3 has taken a fork
+[32m2002 1 has taken a fork
+[33m2002 1 is eating
+[36m2002 5 is thinking
+[35m2002 4 is sleeping
+[32m2002 3 has taken a fork
+[33m2002 3 is eating
+[32m2002 5 has taken a fork
+[36m2202 2 is thinking
+[32m2202 2 has taken a fork
+[35m2202 1 is sleeping
+[32m2202 5 has taken a fork
+[33m2202 5 is eating
+[35m2202 3 is sleeping
+[36m2202 4 is thinking
+[32m2202 4 has taken a fork
+[32m2202 2 has taken a fork
+[33m2202 2 is eating
+[36m2402 1 is thinking
+[36m2402 3 is thinking
+[35m2402 5 is sleeping
+[32m2402 1 has taken a fork
+[35m2402 2 is sleeping
+[32m2402 3 has taken a fork
+[32m2402 1 has taken a fork
+[33m2402 1 is eating
+[32m2402 4 has taken a fork
+[33m2402 4 is eating
+[36m2602 5 is thinking
+[36m2602 2 is thinking
+[35m2602 1 is sleeping
+[32m2602 2 has taken a fork
+[35m2602 4 is sleeping
+[32m2602 3 has taken a fork
+[33m2602 3 is eating
+[32m2602 5 has taken a fork
+[32m2602 5 has taken a fork
+[33m2602 5 is eating
+[35m2802 3 is sleeping
+[36m2802 4 is thinking
+[32m2802 4 has taken a fork
+[32m2802 2 has taken a fork
+[33m2802 2 is eating
+[36m2802 1 is thinking
+[35m2802 5 is sleeping
+[32m2802 1 has taken a fork
+[32m2802 4 has taken a fork
+[33m2802 4 is eating
+[36m3002 3 is thinking
+[35m3002 2 is sleeping
+[32m3002 3 has taken a fork
+[32m3002 1 has taken a fork
+[33m3002 1 is eating
+[36m3002 5 is thinking
+[35m3002 4 is sleeping
+[32m3002 5 has taken a fork
+[32m3002 3 has taken a fork
+[33m3002 3 is eating
+[36m3202 2 is thinking
+[32m3202 2 has taken a fork
+[35m3202 1 is sleeping
+[35m3202 3 is sleeping
+[32m3202 5 has taken a fork
+[33m3202 5 is eating
+[36m3202 4 is thinking
+[32m3202 4 has taken a fork
+[32m3202 2 has taken a fork
+[33m3202 2 is eating
+[36m3402 3 is thinking
+[36m3402 1 is thinking
+[35m3402 2 is sleeping
+[32m3402 3 has taken a fork
+[35m3402 5 is sleeping
+[32m3402 1 has taken a fork
+[32m3402 1 has taken a fork
+[33m3402 1 is eating
+[32m3402 4 has taken a fork
+[33m3402 4 is eating
+[36m3602 2 is thinking
+[36m3602 5 is thinking
+[35m3602 1 is sleeping
+[32m3602 2 has taken a fork
+[35m3602 4 is sleeping
+[32m3602 5 has taken a fork
+[32m3602 5 has taken a fork
+[33m3602 5 is eating
+[32m3602 3 has taken a fork
+[33m3602 3 is eating
 [0m
 ==========================
 --- END OF SIMULATION ---

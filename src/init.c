@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/06/30 15:13:56 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 12:56:27 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,9 @@ int	init_data(int argc, char **argv, t_data *data)
 //Initialisation des mutex autres que les fourchettes
 int	init_mutex(t_data *data)
 {
-	if (pthread_mutex_init(&(data)->pmutex, NULL) == -1
-		|| pthread_mutex_init(&(data)->mmutex, NULL) == -1
-		|| pthread_mutex_init(&(data)->smutex, NULL) == -1
-		|| pthread_mutex_init(&(data)->tmutex, NULL) == -1
-		|| pthread_mutex_init(&(data)->temutex, NULL) == -1)
+	if (pthread_mutex_init(&(data)->print_mtx, NULL) == -1
+		|| pthread_mutex_init(&(data)->stop_mtx, NULL) == -1
+		|| pthread_mutex_init(&(data)->time_mtx, NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return (1);
@@ -52,12 +50,8 @@ void	init_philo(t_philo *current)
 	current->last_meal = -1;
 	current->nmeal = 0;
 	current->next = NULL;
-	if (pthread_mutex_init(&(current->fmutex), NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return ;
-	}
-	if (pthread_mutex_init(&(current->pmmutex), NULL) == -1)
+	if (pthread_mutex_init(&(current->f_mtx), NULL) == -1
+	|| pthread_mutex_init(&(current->lmeal_mtx), NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return ;
