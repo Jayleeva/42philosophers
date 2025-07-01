@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:35:46 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:47:56 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		init_data(int argc, char **argv, t_data *data);
 
 //un seul philosophe
 void	one_philo(t_philo *philo);
-void	end_one_philo(t_data *data, pthread_t **thread);
+void	end_one_philo(t_data *data);
 
 //simulation
 void	*routine(void *philo);

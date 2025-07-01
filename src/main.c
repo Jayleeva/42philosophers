@@ -6,11 +6,33 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:17:29 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:47:21 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
+
+void	end(t_data *data, pthread_t **thread)
+{
+	if (data->nphilo == 1)
+		end_one_philo(data);
+	else
+	{
+		while (1)
+		{
+			if (!pthread_mutex_lock(&(data->stop_mtx)))
+			{
+				if (data->stop)
+				{
+					pthread_mutex_unlock(&(data->stop_mtx));
+					break;
+				}
+				pthread_mutex_unlock(&(data->stop_mtx));
+			}
+		}
+		end_simulation(data, thread);
+	}
+}
 
 //Lancement et arrêt du programme : 
 // parsing, initialisation var et mutex, lancement et arrêt simulation
@@ -34,9 +56,6 @@ int	main(int argc, char **argv)
 		return (1);
 	if (start_simulation(&data, thread, list))
 		return (1);
-	if (data.nphilo == 1)
-		end_one_philo(&data, thread);
-	else
-		end_simulation(&data, thread);
+	end(&data, thread);
 	return (0);
 }
