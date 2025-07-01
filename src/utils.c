@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:18:03 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:23:16 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ int	ft_atoi(const char *str)
 void	print_output(t_philo *p, char *color, char *msg)
 {
 	pthread_mutex_lock(&(p->data)->print_mtx);
-	p->data->msg = msg;
-	printf("%s%ld %d %s", color, get_time(p->data), p->id, p->data->msg);
+	printf("%s%ld %d %s", color, get_time(p->data), p->id, msg);
 	pthread_mutex_unlock(&(p->data)->print_mtx);
 }
 

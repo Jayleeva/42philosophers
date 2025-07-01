@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:17:18 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:28:56 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,11 @@ int	init_data(int argc, char **argv, t_data *data)
 //Initialisation des mutex autres que les fourchettes
 int	init_mutex(t_data *data)
 {
-	if (pthread_mutex_init(&(data)->print_mtx, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->mmeals_mtx, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->stop_mtx, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->time_mtx, NULL) == -1)
-	{
-		write(2, "failed mutex init\n", 18);
-		return (1);
-	}
-	if (pthread_mutex_init(&(data)->tte_mtx, NULL) == -1)
+	if (pthread_mutex_init(&(data)->print_mtx, NULL) == -1
+		|| pthread_mutex_init(&(data)->mmeals_mtx, NULL) == -1
+		|| pthread_mutex_init(&(data)->stop_mtx, NULL) == -1
+		|| pthread_mutex_init(&(data)->time_mtx, NULL) == -1
+		|| pthread_mutex_init(&(data)->tte_mtx, NULL) == -1)
 	{
 		write(2, "failed mutex init\n", 18);
 		return (1);

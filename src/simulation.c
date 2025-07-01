@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:17:56 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:38:45 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	print_banner(char c)
 	}
 }
 
-
 //Le thread (ou philo) prend le temps actuel comme temps du dernier repas; 
 // s'il est pair, il commence par dormir;
 // tant qu'une condition de fin n'a pas ete atteinte,
@@ -38,7 +37,7 @@ void	*routine(void *philo)
 {
 	t_philo	*philo_;
 	int		tmp;
-	
+
 	philo_ = (t_philo *)philo;
 	if (!pthread_mutex_lock(&(philo_->lmeal_mtx)))
 	{
@@ -88,11 +87,8 @@ int	start_simulation(t_data *data, pthread_t **thread, t_philo *list)
 		data->list = data->list->next;
 		i ++;
 	}
-	if (data->nphilo != 1)
-	{
-		if (start_monitor(data, thread, i))
-			return (1);
-	}
+	if (start_monitor(data, thread, i))
+		return (1);
 	return (0);
 }
 

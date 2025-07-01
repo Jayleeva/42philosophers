@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:16:56 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:34:15 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,34 @@ void	go_sleep(t_philo *philo)
 	print_output(philo, KCYN, "is thinking\n");
 }
 
-void	try_eating_utils(t_philo *philo)
+//Le philo mange pendant time_to_eat, 
+//incremente son nombre de repas, 
+//actualise le temps de son dernier repas
+void	eat(t_philo *philo)
 {
+	time_t	time_to_eat;
+
+	print_output(philo, KYEL, "is eating\n");
+	if (!pthread_mutex_lock(&(philo->data->tte_mtx)))
+	{
+		time_to_eat = philo->data->time_to_eat;
+		pthread_mutex_unlock(&(philo->data->tte_mtx));
+		usleep(time_to_eat * 1000);
+	}
 	if (!pthread_mutex_lock(&(philo->next->lmeal_mtx)))
 	{
 		philo->last_meal = get_time(philo->data);
 		philo->nmeal ++;
 		pthread_mutex_unlock(&(philo->next->lmeal_mtx));
 	}
+	pthread_mutex_unlock(&(philo->next->f_mtx));
+	pthread_mutex_unlock(&(philo->f_mtx));
 }
 
 //Le philo essaie de lock ses fourchettes
-// s'il réussit, il mange pendant le time_to_eat puis va dormir,
-// sinon, il réfléchit
+// s'il réussit, il mange puis va dormir,
 int	try_eating(t_philo *philo)
 {
-	time_t	time_to_eat;
-
 	if (!pthread_mutex_lock(&(philo->f_mtx)))
 	{
 		if (must_stop(philo))
@@ -51,16 +62,7 @@ int	try_eating(t_philo *philo)
 			if (must_stop(philo))
 				return (2);
 			print_output(philo, KGRN, "has taken a fork\n");
-			print_output(philo, KYEL, "is eating\n");
-			if (!pthread_mutex_lock(&(philo->data->tte_mtx))) // data race avec la variable data?
-			{
-				time_to_eat = philo->data->time_to_eat;
-				pthread_mutex_unlock(&(philo->data->tte_mtx));
-				usleep(time_to_eat * 1000);
-			}
-			try_eating_utils(philo);
-			pthread_mutex_unlock(&(philo->next->f_mtx));
-			pthread_mutex_unlock(&(philo->f_mtx));
+			eat(philo);
 			go_sleep(philo);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: cyglardo <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:27:20 by cyglardo          #+#    #+#             */
-/*   Updated: 2025/07/01 14:16:29 by cyglardo         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:35:46 by cyglardo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,15 @@ typedef struct s_philo
 	int				id;
 	t_bool			fork_free;
 	pthread_mutex_t	f_mtx;
-	int				nmeal;
 	time_t			last_meal;
 	pthread_mutex_t	lmeal_mtx;
+	int				nmeal;
 	struct s_philo	*next;
 	struct s_data	*data;
 }					t_philo;
 
 typedef struct s_data
 {
-	struct timeval		stime;
 	time_t				time;
 	pthread_mutex_t		time_mtx;
 	int					nphilo;
@@ -52,13 +51,12 @@ typedef struct s_data
 	time_t				time_to_eat;
 	time_t				time_to_sleep;
 	pthread_mutex_t		tte_mtx;
-	int					stop;
-	pthread_mutex_t		stop_mtx;
-	t_philo				*list;
 	int					minmeals;
 	pthread_mutex_t		mmeals_mtx;
-	char				*msg;
+	int					stop;
+	pthread_mutex_t		stop_mtx;
 	pthread_mutex_t		print_mtx;
+	t_philo				*list;
 	t_philo				*monitor;
 }						t_data;
 
@@ -88,7 +86,7 @@ void	*monitoring(void *monitor);
 //actions
 void	go_sleep(t_philo *philo);
 int		try_eating(t_philo *philo_);
-void	try_eating_utils(t_philo *philo);
+void	eat(t_philo *philo);
 void	death(t_philo *philo);
 
 //ending conditions
