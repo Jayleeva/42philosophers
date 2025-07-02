@@ -66,7 +66,7 @@ Le ``param`` est généralement set à NULL.
 ```
 if (!pthread_mutex_lock(&your_mutex))
 ```
-L'argument doit doit être un pointeur sur pthread_mutex_t. En cas de succes, la fonction retourne 0.
+L'argument doit être un pointeur sur pthread_mutex_t. En cas de succes, la fonction retourne 0.
 
 On appelle la fonction dans une condition ``if (!)`` : si la fonction retourne autre chose que 0, c'est que le lock n'a pas fonctionne, donc possiblement que le mutex a deja ete locked par un autre thread. Si elle retourne 0, le lock a fonctionne, et tout ce qui est defini dans le if ne sera accessible que par le thread qui a pu lock. Le mutex n'est donc pas lie a une variable en particulier: il se fait dans une condition qui si vraie, bloque l'acces a la partie du code contenu entre lock et unlock pour les autres threads. Cependant, s'il y a plusieurs variables communes dans votre projet (ce qui est le cas dans philosophers), vous aurez besoin de plusieurs mutex, pour que le lock d'une partie du code n'empeche pas le lock d'une autre. 
 
