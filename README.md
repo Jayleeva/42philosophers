@@ -41,7 +41,7 @@ L'``arg`` peut être NULL également. C'est ce qui sera envoyé en argument à `
 ```
 pthread_join(*your_thread, param);
 ```
-Le premier arguent doit etre un pthread_t dereference.
+Le premier argument doit être un pthread_t déréferencé.
 Le ``param`` est généralement set à NULL.
 
 # Mutex
@@ -74,7 +74,7 @@ On appelle la fonction dans une condition ``if (!)`` : si la fonction retourne a
 ```
 pthread_mutex_unlock(&your_mutex);
 ```
-L'argument doit doit être un pointeur sur pthread_mutex_t.
+L'argument doit être un pointeur sur pthread_mutex_t.
 
 A(aux) la sortie(s) du if (!lock), il faut unlock. 
 
@@ -82,7 +82,7 @@ A(aux) la sortie(s) du if (!lock), il faut unlock.
 ```
 pthread_mutex_destroy(&your_mutex);
 ```
-L'argument doit doit être un pointeur sur pthread_mutex_t.
+L'argument doit être un pointeur sur pthread_mutex_t.
 
 # Race condition ou data race
 Quand plusieurs threads tentent d'acceder a la meme variable, il y a ce qu'on appelle des "data race", ou "race conditions". On les empeche avec des mutex soigneusement initialises, places, et detruits. Tout mutex lock doit etre unlock avant la fin du programme.
