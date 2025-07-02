@@ -41,7 +41,7 @@ L'``arg`` peut être NULL également. C'est ce qui sera envoyé en argument à `
 ```
 pthread_join(*your_thread, param);
 ```
-Le premier argument doit être un pthread_t déréferencé.
+Le premier argument doit être un pthread_t déréférencé.
 Le ``param`` est généralement set à NULL.
 
 # Mutex
