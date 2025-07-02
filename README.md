@@ -14,7 +14,7 @@ Projet du 4ème cercle du cursus 42
 
 **REMARQUE:** Oui, la structure principale contient le chaînon de tête (donc un pointeur) de la liste chaînée, et la structure de la liste chaînée contient un pointeur sur la structure principale. Cela peut paraître bizarre, mais c'est nécessaire pour que l'on puisse lancer les threads et accéder à toutes les infos tout au long du programme. 
 
-*On doit pouvoir accéder à la liste chaînée depuis la structure principale et accéder à la structure principale depuis n'importe quel chaînon de la liste chaînée.*
+*Si les arguments passes a l'execution sont stockes dans la structure principale, on doit pouvoir accéder à la liste chaînée depuis la structure principale et accéder à la structure principale depuis n'importe quel chaînon de la liste chaînée.*
 
 Aussi, la liste chaînée doit être circulaire: le dernier chaînon doit pointer sur le premier, afin qu'il puisse lui aussi accéder à une deuxième fourchette. Rappelez-vous que le premier philosophe a besoin de sa propre fourchette (1) et de celle de son voisin (2), et que le deuxième philsophe a besoin de sa propre fourchette (2) et de celle de son voisin (3), et ainsi de suite, le dernier philosophe ayant besoin de sa propre fourchette (ex. 5) et de celle de son voisin (1). C'est cela même qui fait que vous aurez besoin de mutex: quand 1 mange, 2 ne peut pas manger, quand 2 mange, 1 ne peut pas manger, etc, quand le dernier (ex.5) mange, 1 ne peut pas manger. Votre programme doit fonctionner de la même manière peut importe le nombre de philosophes, pair ou impair.
 
@@ -45,23 +45,13 @@ Le premier arguent doit etre un pthread_t dereference.
 Le ``param`` est généralement set à NULL.
 
 # Mutex
-Si une variable doit etre utilisee par plusieurs threads, il faut s'assurer qu'ils n'y aient pas acces en meme temps, pour eviter les resultats fausses voire les crashs. C'est la que les mutex interviennent: ils servent a verouiller la variable jusqu'a ce que le premier thread a l'avoir atteinte ait fini sa tache avec elle, et a la deverouiller ensuite pour que le thread suivant puisse accomplir sa tache.
+Si une variable doit etre utilisee par plusieurs threads, il faut s'assurer qu'ils n'y aient pas acces en meme temps (data race / race condition), pour eviter les resultats fausses voire les crashs. C'est la que les mutex interviennent: ils servent a verouiller une partie du code jusqu'a ce que le premier thread a l'avoir atteinte ait fini sa tache avec elle, et a la deverouiller ensuite pour que le thread suivant puisse accomplir sa tache.
 
 ## Utiliser un mutex
 1. Tout d'abord, il faut initialiser votre mutex.
-2. Ensuite, il faut le verouiller juste avant l'acces a la variable.
+2. Ensuite, il faut le verouiller juste avant l'acces a la variable commune.
 3. Une fois la tache accomplie par le thread, il faut le deverouiller.
 4. Une fois que vous n'en avez plus besoin (par ex. quand tous les threads ont termine la tache), il faut le detruire.
-
-**A SAVOIR:**
-Pour que le mutex soit lie a la variable a verouiller, il faut (je crois) les mettre dans une meme structure.
-```
-typedef struct s_your_mutex_struct
-{
-    your_type           your_var;
-    pthread_mutex_t     your_mutex;
-}                       t_your_mutex_struct;
-```
 
 ## Initialisation d'un mutex
 ```
@@ -74,15 +64,19 @@ Le ``param`` est généralement set à NULL.
 
 ## Verouillage d'un mutex
 ```
-pthread_mutex_lock(&your_mutex);
+if (!pthread_mutex_lock(&your_mutex))
 ```
-L'argument doit doit être un pointeur sur pthread_mutex_t.
+L'argument doit doit être un pointeur sur pthread_mutex_t. En cas de succes, la fonction retourne 0.
+
+On appelle la fonction dans une condition ``if (!)`` : si la fonction retourne autre chose que 0, c'est que le lock n'a pas fonctionne, donc possiblement que le mutex a deja ete locked par un autre thread. Si elle retourne 0, le lock a fonctionne, et tout ce qui est defini dans le if ne sera accessible que par le thread qui a pu lock. Le mutex n'est donc pas lie a une variable en particulier: il se fait dans une condition qui si vraie, bloque l'acces a la partie du code contenu entre lock et unlock pour les autres threads. Cependant, s'il y a plusieurs variables communes dans votre projet (ce qui est le cas dans philosophers), vous aurez besoin de plusieurs mutex, pour que le lock d'une partie du code n'empeche pas le lock d'une autre. 
 
 ## Deverouillage d'un mutex
 ```
 pthread_mutex_unlock(&your_mutex);
 ```
 L'argument doit doit être un pointeur sur pthread_mutex_t.
+
+A(aux) la sortie(s) du if (!lock), il faut unlock. 
 
 ## Destruction d'un mutex
 ```
@@ -91,8 +85,11 @@ pthread_mutex_destroy(&your_mutex);
 L'argument doit doit être un pointeur sur pthread_mutex_t.
 
 # Race condition ou data race
-Quand (?), il y a ce qu'on appelle des "data race", ou "race conditions". 
+Quand plusieurs threads tentent d'acceder a la meme variable, il y a ce qu'on appelle des "data race", ou "race conditions". On les empeche avec des mutex soigneusement initialises, places, et detruits. Tout mutex lock doit etre unlock avant la fin du programme.
 
-Pour vérifier si vous en avez, utilisez l'outil DRD ou helgrind de Valgrind. Helgrind est plus facile à lire.
+**REMARQUE:**
+Attention a ne pas destroy les mutex avant que tous vos threads soient joined.
+
+Pour vérifier si vous avez des data race, utilisez l'outil DRD ou helgrind de Valgrind. Helgrind est plus facile à lire.
 
 Pour utiliser un outil valgrind, on ajoute le flag ``--tool=`` et l'outil en question: ``valgrind --tool=drd`` ou ``valgrind --tool=helgrind``. 
