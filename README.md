@@ -51,7 +51,7 @@ Si une variable doit etre utilisee par plusieurs threads, il faut s'assurer qu'i
 1. Tout d'abord, il faut initialiser votre mutex.
 2. Ensuite, il faut le verouiller juste avant l'acces a la variable commune.
 3. Une fois la tache accomplie par le thread, il faut le deverouiller.
-4. Une fois que vous n'en avez plus besoin (par ex. quand tous les threads ont termine la tache), il faut le detruire.
+4. Une fois que vous n'en avez plus besoin (typiquement: fin du programme), il faut le detruire.
 
 ## Initialisation d'un mutex
 ```
